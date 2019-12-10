@@ -7,8 +7,8 @@ import history from '../../lib/history'
 import Header from '../Header'
 import Footer from '../Footer'
 import Home from '../Home'
-import Map from '../Map'
-import PrivateRoute from "../PrivateRoute"
+import SCLMap from '../SCLMap'
+// import PrivateRoute from "../PrivateRoute"
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -45,7 +45,8 @@ const Layout = () => {
         <main className={classes.main}>
           <Switch>
             <Route path="/" component={Home} exact />
-            <PrivateRoute path="/map" component={Map} />
+            <Route path="/map" component={SCLMap} />
+            {/* <PrivateRoute path="/map" component={SCLMap} /> */}
           </Switch>
         </main>
         <Footer />

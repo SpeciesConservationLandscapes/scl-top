@@ -1,14 +1,10 @@
 import React from 'react'
-// import { makeStyles } from '@material-ui/core/styles'
-
-// const mapStyles = makeStyles(theme => ({
-// }))
+import LeafletMap from '../LeafletMap'
 
 const Map = () => {
-  // const classes = mapStyles()
 
   return (
-    <div>Map</div>
+    <LeafletMap />
   )
 }
 

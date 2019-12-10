@@ -28,10 +28,11 @@ const PrivateRoute = ({ Component, path, ...rest }) => {
 export default PrivateRoute
 
 PrivateRoute.defaultProps = {
+  Component: '',
   path: '/home'
 }
 
 PrivateRoute.propTypes = {
-  Component: PropTypes.node.isRequired,
+  Component: PropTypes.node,
   path: PropTypes.string
 }

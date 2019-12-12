@@ -14,18 +14,16 @@ export const Auth0Provider = ({
   onRedirectCallback = DEFAULT_REDIRECT_CALLBACK,
   ...initOptions
 }) => {
-
   const [isAuthenticated, setIsAuthenticated] = useState()
   const [user, setUser] = useState()
   const [auth0Client, setAuth0] = useState()
   const [loading, setLoading] = useState(true)
   const [popupOpen, setPopupOpen] = useState(false)
+  const [accessToken, setAccessToken] = useState(null)
 
   useEffect(() => {
     const initAuth0 = async () => {
       const auth0FromHook = await createAuth0Client(initOptions)
-
-      console.log(auth0FromHook)
 
       setAuth0(auth0FromHook)
 
@@ -40,9 +38,11 @@ export const Auth0Provider = ({
       setIsAuthenticated(isAuth)
 
       if (isAuth) {
+        const token = await auth0FromHook.getTokenSilently()
         const usr = await auth0FromHook.getUser()
 
         setUser(usr)
+        setAccessToken(token)
       }
 
       setLoading(false)
@@ -82,6 +82,7 @@ export const Auth0Provider = ({
       value={{
         isAuthenticated,
         user,
+        accessToken,
         loading,
         popupOpen,
         loginWithPopup,
@@ -99,10 +100,10 @@ export const Auth0Provider = ({
 }
 
 Auth0Provider.defaultProps = {
-  onRedirectCallback: DEFAULT_REDIRECT_CALLBACK
+  onRedirectCallback: DEFAULT_REDIRECT_CALLBACK,
 }
 
 Auth0Provider.propTypes = {
   children: PropTypes.element.isRequired,
-  onRedirectCallback: PropTypes.func
+  onRedirectCallback: PropTypes.func,
 }

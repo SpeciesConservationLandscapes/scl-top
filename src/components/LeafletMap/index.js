@@ -4,10 +4,11 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import MapLayers from '../../lib/maplayers'
+import { useAuth0 } from '../../react-auth0-spa'
+import SecureTileLayer from '../../lib/leaflet-secure-tilelayer'
 
 const mapStyle = makeStyles(() => ({
   mapcontainer: {
@@ -31,9 +32,12 @@ const mapStyle = makeStyles(() => ({
 }))
 
 const LeafletMap = () => {
+  const { accessToken } = useAuth0()
+
   const [layerState] = useState({})
 
   let map
+
   const classes = mapStyle()
   const worldImageryMapLayer = L.tileLayer(
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
@@ -41,6 +45,15 @@ const LeafletMap = () => {
       attribution: 'Tiles &copy; Esri',
     },
   )
+
+  const testLayer = new SecureTileLayer(
+    'http://localhost:8181/v1/tiles/pas/{z}/{x}/{y}',
+    {
+      attribution: '&copy; WCS',
+      token: accessToken
+    },
+  )
+
   const layers = {}
   const mapProperty = {
     center: [31.821628051276857, 103.62284012465541],
@@ -52,6 +65,7 @@ const LeafletMap = () => {
   }
 
   layers.protectedArea = MapLayers.getTclCountriesBiomesPasLayer()
+  layers.tcl = testLayer
 
   const handleChange = e => {
     const layerIndex = e.target.value
@@ -70,6 +84,12 @@ const LeafletMap = () => {
   React.useEffect(() => {
     map = L.map('map', mapProperty)
     map.addLayer(worldImageryMapLayer)
+
+    // const fn = async () => {
+    //   tokenState.token = await getTokenSilently()
+    // }
+
+    // fn()
   }, [])
 
   return (

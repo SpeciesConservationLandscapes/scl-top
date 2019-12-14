@@ -182,9 +182,7 @@
     "no-throw-literal": "error",
     "no-trailing-spaces": "error",
     "no-undef-init": "error",
-    "no-underscore-dangle": [
-      "error", {"allowAfterThis": true}
-    ],
+    "no-underscore-dangle": 0,
     "no-unused-vars": [
       "error",
       {

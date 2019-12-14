@@ -6,14 +6,16 @@ import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import '../../lib/leaflet-tilelayer-subpixel-fix'
 import MapLayers from '../../lib/maplayers'
 
 const mapStyle = makeStyles(() => ({
   mapcontainer: {
-    width: '100vw',
-    height: '100vh',
-    paddingTop: '50px',
-    paddingBottom: '35px',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: '49px',
+    bottom: '35px',
     background: 'black',
   },
   mapcanvas: {

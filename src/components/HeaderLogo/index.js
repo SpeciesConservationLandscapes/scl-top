@@ -1,5 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { Link } from 'react-router-dom'
 
 const logoStyles = makeStyles(() => ({
   headerLogoImage: {
@@ -12,11 +13,13 @@ const HeaderLogo = () => {
   const classes = logoStyles()
 
   return (
-    <img
-      src={`${process.env.PUBLIC_URL}/images/header-logo.png`}
-      className={classes.headerLogoImage}
-      alt="logo"
-    />
+    <Link to="/">
+      <img
+        src={`${process.env.PUBLIC_URL}/images/header-logo.png`}
+        className={classes.headerLogoImage}
+        alt="logo"
+      />
+    </Link>
   )
 }
 

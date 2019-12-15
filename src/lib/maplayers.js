@@ -12,6 +12,7 @@ class MapLayers {
       attribution: '&copy; WCS',
       subdomains: ['tilea', 'tileb', 'tilec', 'tiled'],
       token: this.tokenUtil.token,
+      opacity: 0.5,
     }
   }
 
@@ -29,7 +30,7 @@ class MapLayers {
         weight: 1,
         strokeOpacity: 0.8,
         fillColor: '#EB5424',
-        fillOpacity: 0.2,
+        fillOpacity: 0.5,
       },
     }).bindPopup(layer => {
       const name = layer.feature.properties.scl_name

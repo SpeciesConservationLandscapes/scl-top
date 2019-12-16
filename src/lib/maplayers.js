@@ -20,9 +20,7 @@ class MapLayers {
     return this.tokenUtil.token
   }
 
-  getTclLayer(country) {
-    const date = '2006-01-01'
-    const species = 1
+  getTclLayer(country, date, species) {
     const url = `${API_ROOT}/sclstats/?country=${country}&date=${date}&scl__species=${species}`
     const tclLayer = L.geoJSON(null, {
       style: {
@@ -40,14 +38,13 @@ class MapLayers {
           Name: ${name}
         </div>
         <div>
-          Total Area: ${area}km<sup>2</sup>
+          Total country area: ${area}km<sup>2</sup>
         </div>
       `
 
       return msg
     })
 
-    this.api = new SecureApi()
     this.api.getData(url).then((resp) => {
       tclLayer.addData(resp.data)
     })

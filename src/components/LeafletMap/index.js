@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -62,8 +62,11 @@ const mapStyle = makeStyles(() => ({
 
 const LeafletMap = () => {
   const [layerState] = useState({})
+  const map = useRef(null)
 
-  let map
+  const country = 'IN'
+  const date = '2006-01-01'
+  const species = 1
 
   const classes = mapStyle()
   const drawerClasses = {
@@ -71,25 +74,9 @@ const LeafletMap = () => {
     paper: classes.drawerPaper
   }
 
-  const worldImageryMapLayer = L.tileLayer(
-    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    {
-      attribution: 'Tiles &copy; Esri',
-    },
-  )
-
-  const mapProperty = {
-    center: [31.821628051276857, 103.62284012465541],
-    zoom: 3,
-    minZoom: 3,
-    maxZoom: 16,
-    zoomControl: true,
-    layers: [worldImageryMapLayer],
-  }
-
   const mapLayers = new MapLayers()
   const layers = {
-    tcl: mapLayers.getTclLayer('IN'),
+    tcl: mapLayers.getTclLayer(country, date, species),
     biome: mapLayers.getBiomeLayer(),
     protectedArea: mapLayers.getProtectedAreaLayer(),
     hii: mapLayers.geHiiLayer(),
@@ -103,16 +90,31 @@ const LeafletMap = () => {
       return
     }
 
-    if (map.hasLayer(layers[layerIndex])) {
-      map.removeLayer(layers[layerIndex])
+    if (map.current.hasLayer(layers[layerIndex])) {
+      map.current.removeLayer(layers[layerIndex])
     } else {
-      map.addLayer(layers[layerIndex])
+      map.current.addLayer(layers[layerIndex])
     }
   }
 
   React.useEffect(() => {
-    map = L.map('map', mapProperty)
-    map.addLayer(worldImageryMapLayer)
+
+    const worldImageryMapLayer = L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      {
+        attribution: 'Tiles &copy; Esri',
+      },
+    )
+    const mapProperty = {
+      center: [31.821628051276857, 103.62284012465541],
+      zoom: 3,
+      minZoom: 3,
+      maxZoom: 16,
+      zoomControl: true,
+      layers: [worldImageryMapLayer],
+    }
+
+    map.current = L.map('map', mapProperty)
   }, [])
 
   return (

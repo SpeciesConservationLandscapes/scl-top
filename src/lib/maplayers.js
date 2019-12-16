@@ -12,6 +12,7 @@ class MapLayers {
       attribution: '&copy; WCS',
       subdomains: ['tilea', 'tileb', 'tilec', 'tiled'],
       token: this.tokenUtil.token,
+      opacity: 0.5,
     }
   }
 
@@ -20,18 +21,18 @@ class MapLayers {
   }
 
   getTclLayer(country, date, species) {
-    const species_id = species["id"]
-    const url = `${API_ROOT}/sclstats/?country=${country}&scl__date=${date}&scl__species=${species_id}`
+    const speciesId = species.id
+    const url = `${API_ROOT}/sclstats/?country=${country}&scl__date=${date}&scl__species=${speciesId}`
     const tclLayer = L.geoJSON(null, {
       style: {
         color: '#EB5424',
         weight: 1,
         strokeOpacity: 0.8,
         fillColor: '#EB5424',
-        fillOpacity: 0.2,
+        fillOpacity: 0.5,
       },
     }).bindPopup(layer => {
-      const name = layer.feature.properties.scl.name
+      const { name } = layer.feature.properties.scl
       const area = parseInt(layer.feature.properties.area, 10)
       const msg = `
         <div>
@@ -45,7 +46,7 @@ class MapLayers {
       return msg
     })
 
-    this.api.getData(url).then((resp) => {
+    this.api.getData(url).then(resp => {
       tclLayer.addData(resp.data)
     })
 
@@ -53,8 +54,8 @@ class MapLayers {
   }
 
   getRestorationLayer(country, date, species) {
-    const species_id = species["id"]
-    const url = `${API_ROOT}/restorationls_stats/?country=${country}&restoration_landscape__date=${date}&restoration_landscape__species=${species_id}`
+    const speciesId = species.id
+    const url = `${API_ROOT}/restorationls_stats/?country=${country}&restoration_landscape__date=${date}&restoration_landscape__species=${speciesId}`
     const restorationLayer = L.geoJSON(null, {
       style: {
         color: '#eb8b2a',
@@ -65,7 +66,7 @@ class MapLayers {
       },
     })
 
-    this.api.getData(url).then((resp) => {
+    this.api.getData(url).then(resp => {
       restorationLayer.addData(resp.data)
     })
 
@@ -73,8 +74,8 @@ class MapLayers {
   }
 
   getSurveyLayer(country, date, species) {
-    const species_id = species["id"]
-    const url = `${API_ROOT}/surveyls_stats/?country=${country}&survey_landscape__date=${date}&survey_landscape__species=${species_id}`
+    const speciesId = species.id
+    const url = `${API_ROOT}/surveyls_stats/?country=${country}&survey_landscape__date=${date}&survey_landscape__species=${speciesId}`
     const surveyLayer = L.geoJSON(null, {
       style: {
         color: '#ebb732',
@@ -85,7 +86,7 @@ class MapLayers {
       },
     })
 
-    this.api.getData(url).then((resp) => {
+    this.api.getData(url).then(resp => {
       surveyLayer.addData(resp.data)
     })
 
@@ -93,8 +94,8 @@ class MapLayers {
   }
 
   getFragmentLayer(country, date, species) {
-    const species_id = species["id"]
-    const url = `${API_ROOT}/fragmentstats/?country=${country}&fragment__date=${date}&fragment__species=${species_id}`
+    const speciesId = species.id
+    const url = `${API_ROOT}/fragmentstats/?country=${country}&fragment__date=${date}&fragment__species=${speciesId}`
     const fragmentLayer = L.geoJSON(null, {
       style: {
         color: '#ebe36a',
@@ -105,7 +106,7 @@ class MapLayers {
       },
     })
 
-    this.api.getData(url).then((resp) => {
+    this.api.getData(url).then(resp => {
       fragmentLayer.addData(resp.data)
     })
 
@@ -131,8 +132,8 @@ class MapLayers {
   }
 
   getTigerHistoricalRangeLayer(species) {
-    const species_slug = species["name"].replace(" ", "_")
-    const url = `${TILE_API_ROOT}/tiles/species/${species_slug}/{z}/{x}/{y}/`
+    const speciesSlug = species.name.replace(' ', '_')
+    const url = `${TILE_API_ROOT}/tiles/species/${speciesSlug}/{z}/{x}/{y}/`
 
     return new SecureTileLayer(url, this.defaultTileLayerConfig)
   }

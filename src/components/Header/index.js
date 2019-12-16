@@ -4,6 +4,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
+import HeaderLogo from '../HeaderLogo'
 import { useAuth0 } from '../../react-auth0-spa'
 import { theme as projectTheme } from '../../theme'
 
@@ -43,6 +44,7 @@ const Header = () => {
   return (
     <AppBar className={classes.appBarProperty}>
       <Toolbar>
+        <HeaderLogo />
         <Typography
           variant="h6"
           color="inherit"
@@ -56,13 +58,11 @@ const Header = () => {
             Login
           </Button>
         )}
+        {isAuthenticated && <Typography>Signed in as {user.name}</Typography>}
         {isAuthenticated && (
-          <Typography>Signed in as {user.name}</Typography>
-        )}
-        {isAuthenticated && (
-          (<Button color="inherit" onClick={() => logout()}>
+          <Button color="inherit" onClick={() => logout()}>
             Log out
-          </Button>)
+          </Button>
         )}
       </Toolbar>
     </AppBar>

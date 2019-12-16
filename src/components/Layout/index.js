@@ -24,7 +24,6 @@ const useStyles = makeStyles(() => ({
     backgroundSize: 'cover',
 
     paddingBottom: '36px',
-    height: '100%',
     flex: 1,
   },
 }))

@@ -4,28 +4,49 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Drawer from '@material-ui/core/Drawer'
+// import styled from 'styled-components/macro'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import '../../lib/leaflet-tilelayer-subpixel-fix'
 import MapLayers from '../../lib/maplayers'
 
 const mapStyle = makeStyles(() => ({
   mapcontainer: {
-    width: '100vw',
-    height: '100vh',
-    paddingTop: '50px',
-    paddingBottom: '35px',
+    position: 'fixed',
+    left: 0,
+    right: 0,
+    top: '49px',
+    bottom: '35px',
     background: 'black',
+
+    // paddingRight: '${props => (props.sidePanelOpen ? '650px' : '0px')}';
+    // @media (min-width: 0px) {
+    //   padding-right: ${props => (props.sidePanelOpen ? '350px' : '0px')};
+    // }
+    // @media (min-width: 960px) {
+    //   padding-right: ${props => (props.sidePanelOpen ? '500px' : '0px')};
+    // }
+    // @media (min-width: 1280px) {
+    //   padding-right: ${props => (props.sidePanelOpen ? '650px' : '0px')};
+    // }
   },
   mapcanvas: {
     width: '100%',
     height: '100%',
   },
   lmContainer: {
-    position: 'absolute',
-    top: '69px',
-    right: '20px',
-    backgroundColor: '#ffffff',
-    zIndex: 5000,
+    marginTop: '49px',
+    marginBottom: '32px',
+  },
+  lmContainerRoot: {
+    height: '600px',
+  },
+  drawerPaper: {
+    height: '480px',
+    marginTop: '49px',
+    marginBottom: '32px',
+    overflow: 'hidden',
   },
 }))
 
@@ -33,11 +54,15 @@ const LeafletMap = () => {
   const [layerState] = useState({})
   const map = useRef(null)
 
-  const country = 'ID'  // temporarily hardcoded to Indonesia
+  const country = 'ID' // temporarily hardcoded to Indonesia
   const date = '2006-01-01'
-  const species = {"id": 1, "name": "Panthera tigris"}
+  const species = { id: 1, name: 'Panthera tigris' }
 
   const classes = mapStyle()
+  const drawerClasses = {
+    root: classes.lmContainerRoot,
+    paper: classes.drawerPaper,
+  }
 
   const mapLayers = new MapLayers()
   const layers = {
@@ -66,7 +91,6 @@ const LeafletMap = () => {
   }
 
   React.useEffect(() => {
-
     const worldImageryMapLayer = L.tileLayer(
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       {
@@ -88,7 +112,13 @@ const LeafletMap = () => {
   return (
     <div className={classes.mapcontainer}>
       <div className={classes.mapcanvas} id="map" />
-      <div className={classes.lmContainer}>
+      <Drawer
+        className={classes.lmContainer}
+        anchor="right"
+        variant="persistent"
+        classes={drawerClasses}
+        open
+      >
         <List>
           <ListItem>
             <FormControlLabel
@@ -195,7 +225,7 @@ const LeafletMap = () => {
             />
           </ListItem>
         </List>
-      </div>
+      </Drawer>
     </div>
   )
 }

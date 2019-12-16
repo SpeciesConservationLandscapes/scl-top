@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import { Button } from '@material-ui/core'
+import { Link } from 'react-router-dom'
 
 const aboutStyles = makeStyles(theme => ({
   root: {
@@ -53,7 +54,9 @@ const About = () => {
         </Typography>
       </div>
       <div className={classes.aboutFooter}>
-        <Button className={classes.callToAction} variant="contained" size="large" color="primary" href="/map">Go to Map</Button>
+        <Link to="/map">
+          <Button className={classes.callToAction} variant="contained" size="large" color="primary">Go to Map</Button>
+        </Link>
       </div>
     </Paper>
   )

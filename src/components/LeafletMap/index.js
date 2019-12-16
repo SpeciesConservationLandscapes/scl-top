@@ -30,7 +30,6 @@ const mapStyle = makeStyles(() => ({
     // @media (min-width: 1280px) {
     //   padding-right: ${props => (props.sidePanelOpen ? '650px' : '0px')};
     // }
-
   },
   mapcanvas: {
     width: '100%',
@@ -57,30 +56,33 @@ const mapStyle = makeStyles(() => ({
     marginTop: '49px',
     marginBottom: '32px',
     overflow: 'hidden',
-  }
+  },
 }))
 
 const LeafletMap = () => {
   const [layerState] = useState({})
   const map = useRef(null)
 
-  const country = 'IN'
+  const country = 'ID' // temporarily hardcoded to Indonesia
   const date = '2006-01-01'
-  const species = 1
+  const species = { id: 1, name: 'Panthera tigris' }
 
   const classes = mapStyle()
   const drawerClasses = {
     root: classes.lmContainerRoot,
-    paper: classes.drawerPaper
+    paper: classes.drawerPaper,
   }
 
   const mapLayers = new MapLayers()
   const layers = {
     tcl: mapLayers.getTclLayer(country, date, species),
+    restoration: mapLayers.getRestorationLayer(country, date, species),
+    survey: mapLayers.getSurveyLayer(country, date, species),
+    fragment: mapLayers.getFragmentLayer(country, date, species),
     biome: mapLayers.getBiomeLayer(),
     protectedArea: mapLayers.getProtectedAreaLayer(),
     hii: mapLayers.geHiiLayer(),
-    species: mapLayers.getTigerHistoricalRangeLayer(),
+    species: mapLayers.getTigerHistoricalRangeLayer(species),
   }
 
   const handleChange = e => {
@@ -98,7 +100,6 @@ const LeafletMap = () => {
   }
 
   React.useEffect(() => {
-
     const worldImageryMapLayer = L.tileLayer(
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       {
@@ -120,7 +121,13 @@ const LeafletMap = () => {
   return (
     <div className={classes.mapcontainer}>
       <div className={classes.mapcanvas} id="map" />
-      <Drawer className={classes.lmContainer} anchor="right" variant="persistent" classes={drawerClasses} open>
+      <Drawer
+        className={classes.lmContainer}
+        anchor="right"
+        variant="persistent"
+        classes={drawerClasses}
+        open
+      >
         <List>
           <ListItem>
             <FormControlLabel
@@ -133,6 +140,45 @@ const LeafletMap = () => {
                 />
               }
               label="Tiger Conservation Landscape"
+            />
+          </ListItem>
+          <ListItem>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={layerState.restoration}
+                  onChange={handleChange}
+                  value="restoration"
+                  color="primary"
+                />
+              }
+              label="Tiger Restoration Landscape"
+            />
+          </ListItem>
+          <ListItem>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={layerState.survey}
+                  onChange={handleChange}
+                  value="survey"
+                  color="primary"
+                />
+              }
+              label="Tiger Survey Landscape"
+            />
+          </ListItem>
+          <ListItem>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={layerState.fragment}
+                  onChange={handleChange}
+                  value="fragment"
+                  color="primary"
+                />
+              }
+              label="Tiger Fragment Landscape"
             />
           </ListItem>
           <ListItem>

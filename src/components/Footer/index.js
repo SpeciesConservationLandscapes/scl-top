@@ -1,8 +1,10 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import Grid from '@material-ui/core/Grid'
 import { useAuth0 } from '../../react-auth0-spa'
 import Copyright from '../Copyright'
+import OrgsPanel from '../OrgsPanel'
 
 const footerStyles = makeStyles(theme => ({
   footer: {
@@ -27,20 +29,48 @@ const Footer = () => {
 
   return (
     <footer className={classes.footer}>
-      <div>
-        {isAuthenticated && (
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            align="left"
-            component="span"
-            className={classes.country}
-          >
-            Country: Indonesia
-          </Typography>
-        )}
-        <Copyright />
-      </div>
+      <Grid container spacing={1}>
+        <Grid
+          item
+          xs={3}
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="center"
+        >
+          {isAuthenticated && (
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              align="left"
+              component="span"
+              className={classes.country}
+            >
+              Country: Indonesia
+            </Typography>
+          )}
+        </Grid>
+        <Grid
+          item
+          xs
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+        >
+          <Copyright />
+        </Grid>
+        <Grid
+          item
+          xs={4}
+          container
+          direction="row"
+          justify="flex-end"
+          alignItems="center"
+        >
+          <OrgsPanel />
+        </Grid>
+      </Grid>
     </footer>
   )
 }

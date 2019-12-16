@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -7,8 +7,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import MapLayers from '../../lib/maplayers'
-import { useAuth0 } from '../../react-auth0-spa'
-import SecureTileLayer from '../../lib/leaflet-secure-tilelayer'
 
 const mapStyle = makeStyles(() => ({
   mapcontainer: {
@@ -32,40 +30,23 @@ const mapStyle = makeStyles(() => ({
 }))
 
 const LeafletMap = () => {
-  const { accessToken } = useAuth0()
-
   const [layerState] = useState({})
+  const map = useRef(null)
 
-  let map
+  const country = 'IN'
+  const date = '2006-01-01'
+  const species = 1
 
   const classes = mapStyle()
-  const worldImageryMapLayer = L.tileLayer(
-    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    {
-      attribution: 'Tiles &copy; Esri',
-    },
-  )
 
-  const testLayer = new SecureTileLayer(
-    'http://localhost:8181/v1/tiles/pas/{z}/{x}/{y}',
-    {
-      attribution: '&copy; WCS',
-      token: accessToken
-    },
-  )
-
-  const layers = {}
-  const mapProperty = {
-    center: [31.821628051276857, 103.62284012465541],
-    zoom: 3,
-    minZoom: 3,
-    maxZoom: 16,
-    zoomControl: true,
-    layers: [worldImageryMapLayer],
+  const mapLayers = new MapLayers()
+  const layers = {
+    tcl: mapLayers.getTclLayer(country, date, species),
+    biome: mapLayers.getBiomeLayer(),
+    protectedArea: mapLayers.getProtectedAreaLayer(),
+    hii: mapLayers.geHiiLayer(),
+    species: mapLayers.getTigerHistoricalRangeLayer(),
   }
-
-  layers.protectedArea = MapLayers.getTclCountriesBiomesPasLayer()
-  layers.tcl = testLayer
 
   const handleChange = e => {
     const layerIndex = e.target.value
@@ -74,22 +55,31 @@ const LeafletMap = () => {
       return
     }
 
-    if (map.hasLayer(layers[layerIndex])) {
-      map.removeLayer(layers[layerIndex])
+    if (map.current.hasLayer(layers[layerIndex])) {
+      map.current.removeLayer(layers[layerIndex])
     } else {
-      map.addLayer(layers[layerIndex])
+      map.current.addLayer(layers[layerIndex])
     }
   }
 
   React.useEffect(() => {
-    map = L.map('map', mapProperty)
-    map.addLayer(worldImageryMapLayer)
 
-    // const fn = async () => {
-    //   tokenState.token = await getTokenSilently()
-    // }
+    const worldImageryMapLayer = L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      {
+        attribution: 'Tiles &copy; Esri',
+      },
+    )
+    const mapProperty = {
+      center: [31.821628051276857, 103.62284012465541],
+      zoom: 3,
+      minZoom: 3,
+      maxZoom: 16,
+      zoomControl: true,
+      layers: [worldImageryMapLayer],
+    }
 
-    // fn()
+    map.current = L.map('map', mapProperty)
   }, [])
 
   return (
@@ -114,26 +104,13 @@ const LeafletMap = () => {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={layerState.habitatType}
+                  checked={layerState.biome}
                   onChange={handleChange}
-                  value="habitatType"
+                  value="biome"
                   color="primary"
                 />
               }
-              label="Habitat Type"
-            />
-          </ListItem>
-          <ListItem>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={layerState.ecoregion}
-                  onChange={handleChange}
-                  value="ecoregion"
-                  color="primary"
-                />
-              }
-              label="Ecoregion"
+              label="Biome"
             />
           </ListItem>
           <ListItem>
@@ -166,9 +143,9 @@ const LeafletMap = () => {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={layerState.tigerHistoricalRange}
+                  checked={layerState.species}
                   onChange={handleChange}
-                  value="tigerHistoricalRange"
+                  value="species"
                   color="primary"
                 />
               }

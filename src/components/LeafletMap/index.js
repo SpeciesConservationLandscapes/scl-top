@@ -33,19 +33,22 @@ const LeafletMap = () => {
   const [layerState] = useState({})
   const map = useRef(null)
 
-  const country = 'IN'
+  const country = 'ID'  // temporarily hardcoded to Indonesia
   const date = '2006-01-01'
-  const species = 1
+  const species = {"id": 1, "name": "Panthera tigris"}
 
   const classes = mapStyle()
 
   const mapLayers = new MapLayers()
   const layers = {
     tcl: mapLayers.getTclLayer(country, date, species),
+    restoration: mapLayers.getRestorationLayer(country, date, species),
+    survey: mapLayers.getSurveyLayer(country, date, species),
+    fragment: mapLayers.getFragmentLayer(country, date, species),
     biome: mapLayers.getBiomeLayer(),
     protectedArea: mapLayers.getProtectedAreaLayer(),
     hii: mapLayers.geHiiLayer(),
-    species: mapLayers.getTigerHistoricalRangeLayer(),
+    species: mapLayers.getTigerHistoricalRangeLayer(species),
   }
 
   const handleChange = e => {
@@ -98,6 +101,45 @@ const LeafletMap = () => {
                 />
               }
               label="Tiger Conservation Landscape"
+            />
+          </ListItem>
+          <ListItem>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={layerState.restoration}
+                  onChange={handleChange}
+                  value="restoration"
+                  color="primary"
+                />
+              }
+              label="Tiger Restoration Landscape"
+            />
+          </ListItem>
+          <ListItem>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={layerState.survey}
+                  onChange={handleChange}
+                  value="survey"
+                  color="primary"
+                />
+              }
+              label="Tiger Survey Landscape"
+            />
+          </ListItem>
+          <ListItem>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={layerState.fragment}
+                  onChange={handleChange}
+                  value="fragment"
+                  color="primary"
+                />
+              }
+              label="Tiger Fragment Landscape"
             />
           </ListItem>
           <ListItem>

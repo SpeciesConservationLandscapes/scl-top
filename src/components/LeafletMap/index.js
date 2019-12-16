@@ -80,7 +80,6 @@ const LeafletMap = () => {
     }
 
     map.current = L.map('map', mapProperty)
-    map.current.addLayer(worldImageryMapLayer)
   }, [])
 
   return (

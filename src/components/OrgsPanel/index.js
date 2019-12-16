@@ -44,46 +44,58 @@ const OrgsPanel = () => {
               </a>
             </Paper>
             <Paper className={classes.paper}>
-              <img
-                className={classes.img}
-                alt="WCS"
-                src={`${process.env.PUBLIC_URL}/images/placeholder.png`}
-              />
+              <a href="https://www.wcs.org/our-work/species/tigers">
+                <img
+                  className={classes.img}
+                  alt="WWF"
+                  src={`${process.env.PUBLIC_URL}/images/placeholder.png`}
+                />
+              </a>
             </Paper>
             <Paper className={classes.paper}>
-              <img
-                className={classes.img}
-                alt="WCS"
-                src={`${process.env.PUBLIC_URL}/images/placeholder.png`}
-              />
+              <a href="https://www.wcs.org/our-work/species/tigers">
+                <img
+                  className={classes.img}
+                  alt="Panthera"
+                  src={`${process.env.PUBLIC_URL}/images/placeholder.png`}
+                />
+              </a>
             </Paper>
             <Paper className={classes.paper}>
-              <img
-                className={classes.img}
-                alt="WCS"
-                src={`${process.env.PUBLIC_URL}/images/placeholder.png`}
-              />
+              <a href="https://www.wcs.org/our-work/species/tigers">
+                <img
+                  className={classes.img}
+                  alt="NASA"
+                  src={`${process.env.PUBLIC_URL}/images/placeholder.png`}
+                />
+              </a>
             </Paper>
             <Paper className={classes.paper}>
-              <img
-                className={classes.img}
-                alt="WCS"
-                src={`${process.env.PUBLIC_URL}/images/placeholder.png`}
-              />
+              <a href="https://www.wcs.org/our-work/species/tigers">
+                <img
+                  className={classes.img}
+                  alt="UMD"
+                  src={`${process.env.PUBLIC_URL}/images/placeholder.png`}
+                />
+              </a>
             </Paper>
             <Paper className={classes.paper}>
-              <img
-                className={classes.img}
-                alt="WCS"
-                src={`${process.env.PUBLIC_URL}/images/placeholder.png`}
-              />
+              <a href="https://www.wcs.org/our-work/species/tigers">
+                <img
+                  className={classes.img}
+                  alt="Indonession Gov"
+                  src={`${process.env.PUBLIC_URL}/images/placeholder.png`}
+                />
+              </a>
             </Paper>
             <Paper className={classes.paper}>
-              <img
-                className={classes.img}
-                alt="WCS"
-                src={`${process.env.PUBLIC_URL}/images/placeholder.png`}
-              />
+              <a href="https://www.wcs.org/our-work/species/tigers">
+                <img
+                  className={classes.img}
+                  alt="Thai Gov"
+                  src={`${process.env.PUBLIC_URL}/images/placeholder.png`}
+                />
+              </a>
             </Paper>
           </Grid>
         </Grid>

@@ -38,21 +38,12 @@ const mapStyle = makeStyles(() => ({
   lmContainer: {
     marginTop: '49px',
     marginBottom: '32px',
-    // width: '200px',
-    // flexShrink: 0
-
-    // position: 'absolute',
-    // top: '0',
-    // right: '0',
-    // backgroundColor: '#ffffff',
-    // zIndex: 5000,
-    // borderBottomLeftRadius: '4px',
   },
   lmContainerRoot: {
     height: '600px',
   },
   drawerPaper: {
-    height: '310px',
+    height: '480px',
     marginTop: '49px',
     marginBottom: '32px',
     overflow: 'hidden',

@@ -47,6 +47,7 @@ const mapStyle = makeStyles(() => ({
     marginTop: '49px',
     marginBottom: '32px',
     overflow: 'hidden',
+    borderBottomLeftRadius: '4px',
   },
 }))
 

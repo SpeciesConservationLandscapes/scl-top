@@ -27,7 +27,7 @@ class MapLayers {
       style: {
         color: '#EB5424',
         weight: 1,
-        strokeOpacity: 0.8,
+        strokeOpacity: 1,
         fillColor: '#EB5424',
         fillOpacity: 0.5,
       },
@@ -60,7 +60,7 @@ class MapLayers {
       style: {
         color: '#eb8b2a',
         weight: 1,
-        strokeOpacity: 0.8,
+        strokeOpacity: 1,
         fillColor: '#eb8b2a',
         fillOpacity: 0.2,
       },
@@ -80,7 +80,7 @@ class MapLayers {
       style: {
         color: '#ebb732',
         weight: 1,
-        strokeOpacity: 0.8,
+        strokeOpacity: 1,
         fillColor: '#ebb732',
         fillOpacity: 0.2,
       },
@@ -100,7 +100,7 @@ class MapLayers {
       style: {
         color: '#ebe36a',
         weight: 1,
-        strokeOpacity: 0.8,
+        strokeOpacity: 1,
         fillColor: '#ebe36a',
         fillOpacity: 0.2,
       },

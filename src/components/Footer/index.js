@@ -26,6 +26,7 @@ const footerStyles = makeStyles(theme => ({
 const Footer = () => {
   const classes = footerStyles()
   const { isAuthenticated } = useAuth0()
+  const country = 'India'
 
   return (
     <footer className={classes.footer}>
@@ -46,7 +47,7 @@ const Footer = () => {
               component="span"
               className={classes.country}
             >
-              Country: Indonesia
+              Country: {country}
             </Typography>
           )}
         </Grid>

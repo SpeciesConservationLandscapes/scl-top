@@ -17,7 +17,7 @@ const aboutStyles = makeStyles(theme => ({
     textAlign: 'center',
   },
   callToAction: {
-    // margin: theme.spacing(),
+    textDecoration: 'none',
   },
 }))
 
@@ -54,8 +54,8 @@ const About = () => {
         </Typography>
       </div>
       <div className={classes.aboutFooter}>
-        <Link to="/map">
-          <Button className={classes.callToAction} variant="contained" size="large" color="primary">Go to Map</Button>
+        <Link to="/map" className={classes.callToAction}>
+          <Button variant="contained" size="large" color="primary">Go to Map</Button>
         </Link>
       </div>
     </Paper>

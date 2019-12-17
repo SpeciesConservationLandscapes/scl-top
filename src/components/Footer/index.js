@@ -2,6 +2,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
 import { useAuth0 } from '../../react-auth0-spa'
 import Copyright from '../Copyright'
 import OrgsPanel from '../OrgsPanel'
@@ -21,12 +22,19 @@ const footerStyles = makeStyles(theme => ({
   country: {
     float: 'left',
   },
+  downloadButton: {
+    marginLeft: theme.spacing(2),
+  },
 }))
 
 const Footer = () => {
   const classes = footerStyles()
   const { isAuthenticated } = useAuth0()
-  const country = 'India'
+  const country = 'Indonesia'
+
+  const downloadReport = () => {
+    alert("Download reporting")
+  }
 
   return (
     <footer className={classes.footer}>
@@ -40,15 +48,18 @@ const Footer = () => {
           alignItems="center"
         >
           {isAuthenticated && (
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              align="left"
-              component="span"
-              className={classes.country}
-            >
-              Country: {country}
-            </Typography>
+            <>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                align="left"
+                component="span"
+                className={classes.country}
+              >
+                Country: {country}
+              </Typography>
+              <Button onClick={downloadReport} variant="contained" size="small" className={classes.downloadButton}>Download report</Button>
+            </>
           )}
         </Grid>
         <Grid

@@ -178,13 +178,13 @@ const LeafletMap = () => {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={layerState.biome}
+                  checked={layerState.species}
                   onChange={handleChange}
-                  value="biome"
+                  value="species"
                   color="primary"
                 />
               }
-              label="Biome"
+              label="Tiger Historical Range"
             />
           </ListItem>
           <ListItem>
@@ -204,6 +204,19 @@ const LeafletMap = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                  checked={layerState.biome}
+                  onChange={handleChange}
+                  value="biome"
+                  color="primary"
+                />
+              }
+              label="Biome"
+            />
+          </ListItem>
+          <ListItem>
+            <FormControlLabel
+              control={
+                <Checkbox
                   checked={layerState.hii}
                   onChange={handleChange}
                   value="hii"
@@ -211,19 +224,6 @@ const LeafletMap = () => {
                 />
               }
               label="Human Influence Index"
-            />
-          </ListItem>
-          <ListItem>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={layerState.species}
-                  onChange={handleChange}
-                  value="species"
-                  color="primary"
-                />
-              }
-              label="Tiger Historical Range"
             />
           </ListItem>
         </List>

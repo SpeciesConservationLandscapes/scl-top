@@ -12,7 +12,7 @@ class MapLayers {
       attribution: '&copy; WCS',
       subdomains: ['tilea', 'tileb', 'tilec', 'tiled'],
       token: this.tokenUtil.token,
-      opacity: 0.5,
+      opacity: 1,
     }
   }
 
@@ -25,11 +25,11 @@ class MapLayers {
     const url = `${API_ROOT}/sclstats/?country=${country}&scl__date=${date}&scl__species=${speciesId}`
     const tclLayer = L.geoJSON(null, {
       style: {
-        color: '#EB5424',
+        color: '#0b0deb',
         weight: 1,
         strokeOpacity: 1,
-        fillColor: '#EB5424',
-        fillOpacity: 0.5,
+        fillColor: '#0b0deb',
+        fillOpacity: 0.2,
       },
     }).bindPopup(layer => {
       const { name } = layer.feature.properties.scl
@@ -58,10 +58,10 @@ class MapLayers {
     const url = `${API_ROOT}/restorationls_stats/?country=${country}&restoration_landscape__date=${date}&restoration_landscape__species=${speciesId}`
     const restorationLayer = L.geoJSON(null, {
       style: {
-        color: '#eb8b2a',
+        color: '#2d9eeb',
         weight: 1,
         strokeOpacity: 1,
-        fillColor: '#eb8b2a',
+        fillColor: '#2d9eeb',
         fillOpacity: 0.2,
       },
     })
@@ -78,10 +78,10 @@ class MapLayers {
     const url = `${API_ROOT}/surveyls_stats/?country=${country}&survey_landscape__date=${date}&survey_landscape__species=${speciesId}`
     const surveyLayer = L.geoJSON(null, {
       style: {
-        color: '#ebb732',
+        color: '#9c1feb',
         weight: 1,
         strokeOpacity: 1,
-        fillColor: '#ebb732',
+        fillColor: '#9c1feb',
         fillOpacity: 0.2,
       },
     })
@@ -98,10 +98,10 @@ class MapLayers {
     const url = `${API_ROOT}/fragmentstats/?country=${country}&fragment__date=${date}&fragment__species=${speciesId}`
     const fragmentLayer = L.geoJSON(null, {
       style: {
-        color: '#ebe36a',
+        color: '#EB5424',
         weight: 1,
         strokeOpacity: 1,
-        fillColor: '#ebe36a',
+        fillColor: '#EB5424',
         fillOpacity: 0.2,
       },
     })

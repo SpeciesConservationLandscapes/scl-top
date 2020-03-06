@@ -5,6 +5,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 import NativeSelect from '@material-ui/core/NativeSelect'
 import { useAuth0 } from '../../react-auth0-spa'
 import Profile from '../../lib/profile'
+import { AppContext } from '../../contexts'
 
 const countryStyle = makeStyles(theme => ({
   formControl: {
@@ -21,7 +22,7 @@ const countryStyle = makeStyles(theme => ({
 
 const CountrySelector = () => {
   const classes = countryStyle()
-  const [country, setCountry] = React.useState('')
+  const context = React.useContext(AppContext)
   const [countries, setCountries] = React.useState([])
   const { isAuthenticated } = useAuth0()
   const profile = new Profile()
@@ -29,15 +30,14 @@ const CountrySelector = () => {
   const changeCountry = event => {
     const code = event.target.value
 
-    setCountry(code)
-    console.log(code)
+    context.setCountryCode(code)
   }
 
   React.useEffect(() => {
     profile.getCountries().then(_countries => {
       setCountries(_countries)
       if (_countries && _countries.length > 0) {
-        setCountry(_countries[0].code)
+        context.setCountryCode(_countries[0].code)
       }
     })
   }, [])
@@ -54,7 +54,7 @@ const CountrySelector = () => {
               id: 'country',
             }}
             onChange={changeCountry}
-            value={country}
+            value={context.countryCode}
           >
             {countries &&
               countries.map(c => {

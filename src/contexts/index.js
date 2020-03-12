@@ -1,13 +1,9 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-export const context = {
-  countryCode: '',
-}
+export const AppContext = React.createContext({ countryCode: '' })
 
-export const AppContext = React.createContext()
-
-export class AppContextProvider extends React.Component {
+export class AppContextProvider extends Component {
   constructor() {
     super()
     this.state = {

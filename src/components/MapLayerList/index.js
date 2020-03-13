@@ -88,19 +88,19 @@ const MapLayerList = ({ map }) => {
   }
 
   if (oldCountryContext !== '' && countryContext !== '' && oldCountryContext !== countryContext) {
-    if (map.current.hasLayer(tclLayer)) {
+    if (tclLayer !== null && map.current.hasLayer(tclLayer)) {
       map.current.removeLayer(tclLayer)
     }
 
-    if (map.current.hasLayer(restorationLayer)) {
+    if (restorationLayer !== null && map.current.hasLayer(restorationLayer)) {
       map.current.removeLayer(restorationLayer)
     }
 
-    if (map.current.hasLayer(surveyLayer)) {
+    if (surveyLayer !== null && map.current.hasLayer(surveyLayer)) {
       map.current.removeLayer(surveyLayer)
     }
 
-    if (map.current.hasLayer(fragmentLayer)) {
+    if (fragmentLayer !== null && map.current.hasLayer(fragmentLayer)) {
       map.current.removeLayer(fragmentLayer)
     }
   }

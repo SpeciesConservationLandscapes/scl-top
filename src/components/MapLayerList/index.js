@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import MapLayerItem from '../MapLayerItem'
+import MapLayerType from '../MapLayerType'
 import MapLayers from '../../lib/maplayers'
 import { AppContext } from '../../contexts'
 
@@ -23,11 +24,8 @@ const MapLayerList = ({ map }) => {
   const [surveyLayer, setSurveyLayer] = useState(null)
   const [fragmentChecked, setFragmentChecked] = useState(false)
   const [fragmentLayer, setFragmentLayer] = useState(null)
-  const [protectedAreaChecked, setProtectedAreaChecked] = useState(false)
   const [protectedAreaLayer, setProtectedAreaLayer] = useState(null)
-  const [biomeChecked, setBiomeChecked] = useState(false)
   const [biomeLayer, setBiomeLayer] = useState(null)
-  const [hiiChecked, setHiiChecked] = useState(false)
   const [hiiLayer, setHiiLayer] = useState(null)
   const [speciesChecked, setSpeciesChecked] = useState(false)
   const [speciesLayer, setSpeciesLayer] = useState(null)
@@ -36,9 +34,6 @@ const MapLayerList = ({ map }) => {
   const handleRestorationChange = e => setRestorationChecked(e.target.checked)
   const handleSurveyChange = e => setSurveyChecked(e.target.checked)
   const handleFragmentChange = e => setFragmentChecked(e.target.checked)
-  const handleProtectedAreaChange = e => setProtectedAreaChecked(e.target.checked)
-  const handleBiomeChange = e => setBiomeChecked(e.target.checked)
-  const handleHiiChange = e => setHiiChecked(e.target.checked)
   const handleSpeciesChange = e => setSpeciesChecked(e.target.checked)
 
   const fetchLayers = countryCode => {
@@ -81,30 +76,6 @@ const MapLayerList = ({ map }) => {
       map.current.addLayer(fragmentLayer)
     } else {
       map.current.removeLayer(fragmentLayer)
-    }
-  }
-
-  if (protectedAreaLayer !== null) {
-    if (protectedAreaChecked) {
-      map.current.addLayer(protectedAreaLayer)
-    } else {
-      map.current.removeLayer(protectedAreaLayer)
-    }
-  }
-
-  if (biomeLayer !== null) {
-    if (biomeChecked) {
-      map.current.addLayer(biomeLayer)
-    } else {
-      map.current.removeLayer(biomeLayer)
-    }
-  }
-
-  if (hiiLayer !== null) {
-    if (hiiChecked) {
-      map.current.addLayer(hiiLayer)
-    } else {
-      map.current.removeLayer(hiiLayer)
     }
   }
 
@@ -159,13 +130,7 @@ const MapLayerList = ({ map }) => {
         <MapLayerItem layerChecked={speciesChecked} handleLayerChange={handleSpeciesChange} label="Tiger Historical Landscape" />
       </ListItem>
       <ListItem>
-        <MapLayerItem layerChecked={protectedAreaChecked} handleLayerChange={handleProtectedAreaChange} label="Protected Area" />
-      </ListItem>
-      <ListItem>
-        <MapLayerItem layerChecked={biomeChecked} handleLayerChange={handleBiomeChange} label="Biome" />
-      </ListItem>
-      <ListItem>
-        <MapLayerItem layerChecked={hiiChecked} handleLayerChange={handleHiiChange} label="Human Influence Index" />
+        <MapLayerType map={map} layers={{ "Protected Area": protectedAreaLayer, "Biome": biomeLayer, "Human Influence Index": hiiLayer }} />
       </ListItem>
     </List>
   )

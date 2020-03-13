@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 
+import { makeStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import MapLayerItem from '../MapLayerItem'
@@ -8,7 +9,13 @@ import MapLayerType from '../MapLayerType'
 import MapLayers from '../../lib/maplayers'
 import { AppContext } from '../../contexts'
 
+const useStyles = makeStyles(() => ({
+  layerTypeStyle: {
+    borderTop: '1px solid'
+  },
+}))
 const MapLayerList = ({ map }) => {
+  const classes = useStyles()
   const countryContext = useContext(AppContext).countryCode
   const [oldCountryContext, setOldCountryContext] = useState()
 
@@ -129,7 +136,7 @@ const MapLayerList = ({ map }) => {
       <ListItem>
         <MapLayerItem layerChecked={speciesChecked} handleLayerChange={handleSpeciesChange} label="Tiger Historical Landscape" />
       </ListItem>
-      <ListItem>
+      <ListItem className={classes.layerTypeStyle}>
         <MapLayerType map={map} layers={{ "Protected Area": protectedAreaLayer, "Biome": biomeLayer, "Human Influence Index": hiiLayer }} />
       </ListItem>
     </List>

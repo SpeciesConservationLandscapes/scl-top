@@ -1,11 +1,13 @@
 import React, { useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+
 import Drawer from '@material-ui/core/Drawer'
 // import styled from 'styled-components/macro'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import '../../lib/leaflet-tilelayer-subpixel-fix'
 import MapLayerList from '../MapLayerList'
+import DateSlider from '../DateSlider'
 
 const mapStyle = makeStyles(() => ({
   mapcontainer: {
@@ -45,6 +47,11 @@ const mapStyle = makeStyles(() => ({
     overflow: 'hidden',
     borderBottomLeftRadius: '4px',
   },
+  dateSliderContainer: {
+    height: '170px',
+    background: 'transparent',
+    border: 0
+  }
 }))
 
 const LeafletMap = () => {
@@ -52,8 +59,10 @@ const LeafletMap = () => {
 
   const classes = mapStyle()
   const drawerClasses = {
-    root: classes.lmContainerRoot,
     paper: classes.drawerPaper,
+  }
+  const dateDrawerClasses = {
+    paper: classes.dateSliderContainer
   }
 
   useEffect(() => {
@@ -80,13 +89,20 @@ const LeafletMap = () => {
     <div className={classes.mapcontainer}>
       <div className={classes.mapcanvas} id="map" />
       <Drawer
-        className={classes.lmContainer}
         anchor="right"
         variant="persistent"
         classes={drawerClasses}
         open
       >
         <MapLayerList map={map}/>
+      </Drawer>
+      <Drawer
+        anchor="bottom"
+        variant="persistent"
+        classes={dateDrawerClasses}
+        open
+      >
+        <DateSlider />
       </Drawer>
     </div>
   )

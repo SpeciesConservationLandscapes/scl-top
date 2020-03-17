@@ -9,6 +9,8 @@ import MapLayerType from '../MapLayerType'
 import MapLayers from '../../lib/maplayers'
 import { AppContext } from '../../contexts'
 
+import usePrevious from '../../lib/usePrevious'
+
 const useStyles = makeStyles(() => ({
   layerTypeStyle: {
     borderTop: '1px solid'
@@ -17,8 +19,8 @@ const useStyles = makeStyles(() => ({
 const MapLayerList = ({ map }) => {
   const classes = useStyles()
   const countryContext = useContext(AppContext).countryCode
-  const [oldCountryContext, setOldCountryContext] = useState()
-
+  const [selectedCountry, setSelectedCountry] = useState(null)
+  const prevSelectedCountry = usePrevious(selectedCountry)
   const date = '2006-01-01'
   const species = { id: 1, name: 'Panthera tigris' }
 
@@ -44,14 +46,16 @@ const MapLayerList = ({ map }) => {
   const handleSpeciesChange = e => setSpeciesChecked(e.target.checked)
 
   const fetchLayers = countryCode => {
-    setTclLayer(mapLayers.getTclLayer(countryCode, date, species))
-    setRestorationLayer(mapLayers.getRestorationLayer(countryCode, date, species))
-    setSurveyLayer(mapLayers.getSurveyLayer(countryCode, date, species))
-    setFragmentLayer(mapLayers.getFragmentLayer(countryCode, date, species))
+    if (!(countryCode === '' || countryCode === undefined)) {
+      setTclLayer(mapLayers.getTclLayer(countryCode, date, species))
+      setRestorationLayer(mapLayers.getRestorationLayer(countryCode, date, species))
+      setSurveyLayer(mapLayers.getSurveyLayer(countryCode, date, species))
+      setFragmentLayer(mapLayers.getFragmentLayer(countryCode, date, species))
+    }
+    setSpeciesLayer(mapLayers.getTigerHistoricalRangeLayer(species))
     setProtectedAreaLayer(mapLayers.getProtectedAreaLayer())
     setBiomeLayer(mapLayers.getBiomeLayer())
     setHiiLayer(mapLayers.geHiiLayer())
-    setSpeciesLayer(mapLayers.getTigerHistoricalRangeLayer(species))
   }
 
   if (tclLayer !== null) {
@@ -94,7 +98,7 @@ const MapLayerList = ({ map }) => {
     }
   }
 
-  if (oldCountryContext !== '' && countryContext !== '' && oldCountryContext !== countryContext) {
+  if (selectedCountry !== prevSelectedCountry) {
     if (tclLayer !== null && map.current.hasLayer(tclLayer)) {
       map.current.removeLayer(tclLayer)
     }
@@ -113,11 +117,18 @@ const MapLayerList = ({ map }) => {
   }
 
   useEffect(() => {
-    if (countryContext !== '') {
-      fetchLayers(countryContext)
-    }
-    setOldCountryContext(countryContext)
+    fetchLayers()
+  }, [])
+
+  useEffect(() => {
+    setSelectedCountry(countryContext)
   }, [countryContext])
+
+  useEffect(() => {
+    if (!(selectedCountry === null || selectedCountry === '')) {
+      fetchLayers(selectedCountry)
+    }
+  }, [selectedCountry])
 
   return (
     <List>

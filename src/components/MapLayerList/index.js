@@ -153,19 +153,19 @@ const MapLayerList = ({ map }) => {
   return (
     <List>
       <ListItem>
-        <MapLayerItem layerChecked={tclChecked} handleLayerChange={handleTclChange} label="Tiger Conservation Landscape" />
+        <MapLayerItem layerChecked={tclChecked} handleLayerChange={handleTclChange} label="Tiger Conservation Landscape" legendStyle={{ bgColor: "#B2B4C8", borderColor: "#140BEB" }} />
       </ListItem>
       <ListItem>
-        <MapLayerItem layerChecked={restorationChecked} handleLayerChange={handleRestorationChange} label="Tiger Restoration Landscape" />
+        <MapLayerItem layerChecked={restorationChecked} handleLayerChange={handleRestorationChange} label="Tiger Restoration Landscape" legendStyle={{ bgColor: "#D5EBFA", borderColor: "#2C9EEB" }} />
       </ListItem>
       <ListItem>
-        <MapLayerItem layerChecked={surveyChecked} handleLayerChange={handleSurveyChange} label="Tiger Survey Landscape" />
+        <MapLayerItem layerChecked={surveyChecked} handleLayerChange={handleSurveyChange} label="Tiger Survey Landscape" legendStyle={{ bgColor: "#E4CAEF", borderColor: "#9C1EEB" }} />
       </ListItem>
       <ListItem>
-        <MapLayerItem layerChecked={fragmentChecked} handleLayerChange={handleFragmentChange} label="Tiger Fragment Landscape" />
+        <MapLayerItem layerChecked={fragmentChecked} handleLayerChange={handleFragmentChange} label="Tiger Fragment Landscape" legendStyle={{ bgColor: "#DDCE9B", borderColor: "#EB5423" }} />
       </ListItem>
       <ListItem>
-        <MapLayerItem layerChecked={speciesChecked} handleLayerChange={handleSpeciesChange} label="Tiger Historical Landscape" />
+        <MapLayerItem layerChecked={speciesChecked} handleLayerChange={handleSpeciesChange} label="Tiger Historical Landscape" legendStyle={{ bgColor: "white", borderColor: "black" }} />
       </ListItem>
       <ListItem className={classes.layerTypeStyle}>
         <MapLayerType map={map} layers={{ "Protected Area": protectedAreaLayer, "Biome": biomeLayer, "Human Influence Index": hiiLayer }} />

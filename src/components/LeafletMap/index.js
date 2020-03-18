@@ -41,10 +41,11 @@ const mapStyle = makeStyles(() => ({
     height: '600px',
   },
   drawerPaper: {
-    height: '480px',
+    height: '500px',
+    width: 'auto',
     marginTop: '49px',
-    marginBottom: '32px',
-    overflow: 'hidden',
+    // marginBottom: '32px',
+    overflow: 'auto',
     borderBottomLeftRadius: '4px',
   },
   dateSliderContainer: {

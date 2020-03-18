@@ -16,9 +16,12 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import usePrevious from '../../lib/usePrevious'
 
 const useStyles = makeStyles({
+  formStyle: {
+    alignItems: 'start',
+  },
   root: {
     flexGrow: 1,
-    maxWidth: 400
+    paddingTop: '10px'
   },
 })
 
@@ -40,6 +43,7 @@ const HiiLegend = styled('div')`
 const PALabel = styled('div')`
   display: inline-flex;
   align-items: center;
+  padding-top: 10px;
 `
 
 const MapLayerType = ({ map, layers }) => {
@@ -115,14 +119,22 @@ const MapLayerType = ({ map, layers }) => {
   }
 
   const layerOptions = layerNames.map(name => {
-    return <FormControlLabel key={name} value={name} control={<Radio />} label={labelFormat(name)}/>
+    return (
+      <FormControlLabel
+        key={name}
+        value={name}
+        control={<Radio />}
+        label={labelFormat(name)}
+        className={classes.formStyle}
+      />
+    )
   })
 
   return (
-    <FormControl component="fieldset">
+    <FormControl component="fieldset" >
       <RadioGroup aria-label="gender" name="gender1" value={radioValue} onChange={handleChange}>
         {layerOptions}
-        <FormControlLabel key="None" value="None" control={<Radio />} label="None"/>
+        <FormControlLabel key="None" value="None" control={<Radio />} label="None" />
       </RadioGroup>
     </FormControl>
   )

@@ -3,12 +3,66 @@ import React, { useState, useEffect, useContext } from 'react'
 import Slider from '@material-ui/core/Slider'
 import Box from '@material-ui/core/Box'
 import styled from 'styled-components/macro'
+import withStyles from '@material-ui/core/styles/withStyles'
 import AvailabelDate from '../../lib/availabledate'
 import { AppContext } from '../../contexts'
 
 const DateSliderBox = styled(Box)`
   padding: 40px 40px 0 40px;
 `
+
+const iOSBoxShadow =
+  '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)'
+
+const IOSSlider = withStyles({
+  root: {
+    color: 'black',
+    height: 2,
+    padding: '15px 0',
+  },
+  thumb: {
+    height: 14,
+    width: 14,
+    backgroundColor: '#fff',
+    boxShadow: iOSBoxShadow,
+    marginTop: -7,
+    marginLeft: -7,
+    '&:focus,&:hover,&$active': {
+      boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.02)',
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
+        boxShadow: iOSBoxShadow,
+      },
+    },
+  },
+  active: {},
+  valueLabel: {
+    left: 'calc(-50% + 11px)',
+    top: -22,
+    '& *': {
+      background: 'transparent',
+      color: '#000',
+    },
+  },
+  track: {
+    height: 2,
+  },
+  rail: {
+    height: 2,
+    opacity: 0.5,
+    backgroundColor: '#bfbfbf',
+  },
+  mark: {
+    backgroundColor: '#bfbfbf',
+    height: 8,
+    width: 1,
+    marginTop: -3,
+  },
+  markActive: {
+    opacity: 1,
+    backgroundColor: 'currentColor',
+  },
+})(Slider)
 
 const DateSlider = () => {
   const countryContext = useContext(AppContext).countryCode
@@ -91,7 +145,7 @@ const DateSlider = () => {
 
   return (
     <DateSliderBox>
-      <Slider
+      <IOSSlider
         defaultValue={100}
         aria-labelledby="discrete-slider-restrict"
         step={null}

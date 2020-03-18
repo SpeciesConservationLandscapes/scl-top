@@ -48,7 +48,7 @@ const mapStyle = makeStyles(() => ({
     borderBottomLeftRadius: '4px',
   },
   dateSliderContainer: {
-    height: '170px',
+    height: '150px',
     background: 'transparent',
     border: 0
   }

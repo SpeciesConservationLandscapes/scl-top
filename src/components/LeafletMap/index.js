@@ -41,10 +41,9 @@ const mapStyle = makeStyles(() => ({
     height: '600px',
   },
   drawerPaper: {
-    height: '500px',
+    height: 'auto',
     width: 'auto',
     marginTop: '49px',
-    // marginBottom: '32px',
     overflow: 'auto',
     borderBottomLeftRadius: '4px',
   },

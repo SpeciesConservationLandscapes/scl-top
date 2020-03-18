@@ -8,7 +8,11 @@ import AvailabelDate from '../../lib/availabledate'
 import { AppContext } from '../../contexts'
 
 const DateSliderBox = styled(Box)`
-  padding: 40px 40px 0 40px;
+  padding: 20px 40px 0 40px;
+  background: linear-gradient(
+    rgba(0, 0, 0, 0.1),
+    #EEEEEE
+  );
 `
 
 const iOSBoxShadow =

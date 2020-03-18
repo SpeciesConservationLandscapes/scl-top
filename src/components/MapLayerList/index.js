@@ -9,33 +9,40 @@ import MapLayerType from '../MapLayerType'
 import MapLayers from '../../lib/maplayers'
 import { AppContext } from '../../contexts'
 
+import usePrevious from '../../lib/usePrevious'
+
 const useStyles = makeStyles(() => ({
   layerTypeStyle: {
     borderTop: '1px solid'
   },
 }))
+
 const MapLayerList = ({ map }) => {
   const classes = useStyles()
   const countryContext = useContext(AppContext).countryCode
-  const [oldCountryContext, setOldCountryContext] = useState()
+  const dateContext = useContext(AppContext).date
 
-  const date = '2006-01-01'
+  const [selectedCountry, setSelectedCountry] = useState('')
+  const prevSelectedCountry = usePrevious(selectedCountry)
+  const [selectedDate, setSelectedDate] = useState('')
+  const prevSelectedDate = usePrevious((selectedDate))
+
   const species = { id: 1, name: 'Panthera tigris' }
 
   const mapLayers = new MapLayers()
-  const [tclChecked, setTclChecked] = useState(false)
+  const [tclChecked, setTclChecked] = useState(true)
   const [tclLayer, setTclLayer] = useState(null)
-  const [restorationChecked, setRestorationChecked] = useState(false)
+  const [restorationChecked, setRestorationChecked] = useState(true)
   const [restorationLayer, setRestorationLayer] = useState(null)
-  const [surveyChecked, setSurveyChecked] = useState(false)
+  const [surveyChecked, setSurveyChecked] = useState(true)
   const [surveyLayer, setSurveyLayer] = useState(null)
-  const [fragmentChecked, setFragmentChecked] = useState(false)
+  const [fragmentChecked, setFragmentChecked] = useState(true)
   const [fragmentLayer, setFragmentLayer] = useState(null)
+  const [speciesChecked, setSpeciesChecked] = useState(true)
+  const [speciesLayer, setSpeciesLayer] = useState(null)
   const [protectedAreaLayer, setProtectedAreaLayer] = useState(null)
   const [biomeLayer, setBiomeLayer] = useState(null)
   const [hiiLayer, setHiiLayer] = useState(null)
-  const [speciesChecked, setSpeciesChecked] = useState(false)
-  const [speciesLayer, setSpeciesLayer] = useState(null)
 
   const handleTclChange = e => setTclChecked(e.target.checked)
   const handleRestorationChange = e => setRestorationChecked(e.target.checked)
@@ -43,15 +50,26 @@ const MapLayerList = ({ map }) => {
   const handleFragmentChange = e => setFragmentChecked(e.target.checked)
   const handleSpeciesChange = e => setSpeciesChecked(e.target.checked)
 
-  const fetchLayers = countryCode => {
-    setTclLayer(mapLayers.getTclLayer(countryCode, date, species))
-    setRestorationLayer(mapLayers.getRestorationLayer(countryCode, date, species))
-    setSurveyLayer(mapLayers.getSurveyLayer(countryCode, date, species))
-    setFragmentLayer(mapLayers.getFragmentLayer(countryCode, date, species))
+  const fetchLayers = (countryCode, date) => {
+    if (!(countryCode === '' || date === '')) {
+      setTclLayer(mapLayers.getTclLayer(countryCode, date, species))
+      setRestorationLayer(mapLayers.getRestorationLayer(countryCode, date, species))
+      setSurveyLayer(mapLayers.getSurveyLayer(countryCode, date, species))
+      setFragmentLayer(mapLayers.getFragmentLayer(countryCode, date, species))
+    }
+  }
+
+  const fetchBaseLayers = () => {
+    setSpeciesLayer(mapLayers.getTigerHistoricalRangeLayer(species))
     setProtectedAreaLayer(mapLayers.getProtectedAreaLayer())
     setBiomeLayer(mapLayers.getBiomeLayer())
     setHiiLayer(mapLayers.geHiiLayer())
-    setSpeciesLayer(mapLayers.getTigerHistoricalRangeLayer(species))
+  }
+
+  const dateConversion = date => {
+    const datePart = date.split('/')
+
+    return `${datePart[2]}-${datePart[1]}-${datePart[0]}`
   }
 
   if (tclLayer !== null) {
@@ -94,7 +112,7 @@ const MapLayerList = ({ map }) => {
     }
   }
 
-  if (oldCountryContext !== '' && countryContext !== '' && oldCountryContext !== countryContext) {
+  if (selectedCountry !== prevSelectedCountry || selectedDate !== prevSelectedDate) {
     if (tclLayer !== null && map.current.hasLayer(tclLayer)) {
       map.current.removeLayer(tclLayer)
     }
@@ -113,11 +131,24 @@ const MapLayerList = ({ map }) => {
   }
 
   useEffect(() => {
+    fetchBaseLayers()
+  }, [])
+
+  useEffect(() => {
     if (countryContext !== '') {
-      fetchLayers(countryContext)
+      setSelectedCountry(countryContext)
     }
-    setOldCountryContext(countryContext)
-  }, [countryContext])
+
+    if (dateContext !== '') {
+      setSelectedDate(dateConversion(dateContext))
+    }
+  }, [countryContext, dateContext])
+
+  useEffect(() => {
+    if (!(selectedCountry === '' || selectedDate === '')) {
+      fetchLayers(selectedCountry, selectedDate)
+    }
+  }, [selectedCountry, selectedDate])
 
   return (
     <List>

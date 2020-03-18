@@ -8,6 +8,7 @@ export class AppContextProvider extends Component {
     super()
     this.state = {
       countryCode: '',
+      date: ''
     }
   }
 

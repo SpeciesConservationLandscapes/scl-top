@@ -12,7 +12,7 @@ const DateSliderBox = styled(Box)`
   background: linear-gradient(
     rgba(0, 0, 0, 0.1),
     #EEEEEE
-  )
+  );
 `
 
 const iOSBoxShadow =

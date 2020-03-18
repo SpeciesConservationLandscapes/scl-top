@@ -35,9 +35,14 @@ const LegendIconStyle = styled('div')`
 
 const HiiLegend = styled('div')`
   height: 50px;
-  width: 200px;
+  width: 240px;
   border-radius: 3px;
   background: linear-gradient(to right, rgba(156,188,161,1) 0%,rgba(211,211,139,1) 17%,rgba(232,162,109,1) 30%,rgba(175,55,0,1) 57%,rgba(156,0,170,1) 87%,rgba(0,36,0,1) 100%);;
+`
+
+const HiiDescription = styled('div')`
+  display: flex;
+  justify-content: space-between;
 `
 
 const PALabel = styled('div')`
@@ -104,8 +109,15 @@ const MapLayerType = ({ map, layers }) => {
             defaultExpandIcon={<ChevronRightIcon />}
           >
             <TreeItem nodeId="16" label={name}>
-              <TreeItem nodeId="17" label={
+              <TreeItem nodeId="17" label="Terrestrial Human Footprint Value"/>
+              <TreeItem nodeId="18" label={
                 <HiiLegend />
+              }/>
+              <TreeItem nodeId="19" label={
+                <HiiDescription>
+                  <span>Low</span>
+                  <span>High</span>
+                </HiiDescription>
               }/>
             </TreeItem>
           </TreeView>

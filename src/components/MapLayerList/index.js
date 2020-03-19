@@ -72,64 +72,6 @@ const MapLayerList = ({ map }) => {
     return `${datePart[2]}-${datePart[1]}-${datePart[0]}`
   }
 
-  if (tclLayer !== null) {
-    if (tclChecked) {
-      map.current.addLayer(tclLayer)
-    } else {
-      map.current.removeLayer(tclLayer)
-    }
-  }
-
-  if (restorationLayer !== null) {
-    if (restorationChecked) {
-      map.current.addLayer(restorationLayer)
-    } else {
-      map.current.removeLayer(restorationLayer)
-    }
-  }
-
-  if (surveyLayer !== null) {
-    if (surveyChecked) {
-      map.current.addLayer(surveyLayer)
-    } else {
-      map.current.removeLayer(surveyLayer)
-    }
-  }
-
-  if (fragmentLayer !== null) {
-    if (fragmentChecked) {
-      map.current.addLayer(fragmentLayer)
-    } else {
-      map.current.removeLayer(fragmentLayer)
-    }
-  }
-
-  if (speciesLayer !== null) {
-    if (speciesChecked) {
-      map.current.addLayer(speciesLayer)
-    } else {
-      map.current.removeLayer(speciesLayer)
-    }
-  }
-
-  if (selectedCountry !== prevSelectedCountry || selectedDate !== prevSelectedDate) {
-    if (tclLayer !== null && map.current.hasLayer(tclLayer)) {
-      map.current.removeLayer(tclLayer)
-    }
-
-    if (restorationLayer !== null && map.current.hasLayer(restorationLayer)) {
-      map.current.removeLayer(restorationLayer)
-    }
-
-    if (surveyLayer !== null && map.current.hasLayer(surveyLayer)) {
-      map.current.removeLayer(surveyLayer)
-    }
-
-    if (fragmentLayer !== null && map.current.hasLayer(fragmentLayer)) {
-      map.current.removeLayer(fragmentLayer)
-    }
-  }
-
   useEffect(() => {
     fetchBaseLayers()
   }, [])
@@ -149,6 +91,80 @@ const MapLayerList = ({ map }) => {
       fetchLayers(selectedCountry, selectedDate)
     }
   }, [selectedCountry, selectedDate])
+
+  useEffect(() => {
+    if (tclLayer !== null) {
+      if (tclChecked) {
+        console.log("Add TCL Layer")
+        map.current.addLayer(tclLayer)
+      } else {
+        console.log("Remove TCL Layer")
+        map.current.removeLayer(tclLayer)
+      }
+    }
+    if (restorationLayer !== null) {
+      if (restorationChecked) {
+        map.current.addLayer(restorationLayer)
+      } else {
+        map.current.removeLayer(restorationLayer)
+      }
+    }
+
+    if (surveyLayer !== null) {
+      if (surveyChecked) {
+        map.current.addLayer(surveyLayer)
+      } else {
+        map.current.removeLayer(surveyLayer)
+      }
+    }
+
+    if (fragmentLayer !== null) {
+      if (fragmentChecked) {
+        map.current.addLayer(fragmentLayer)
+      } else {
+        map.current.removeLayer(fragmentLayer)
+      }
+    }
+
+    if (speciesLayer !== null) {
+      if (speciesChecked) {
+        map.current.addLayer(speciesLayer)
+      } else {
+        map.current.removeLayer(speciesLayer)
+      }
+    }
+
+  }, [
+    tclLayer,
+    tclChecked,
+    restorationLayer,
+    restorationChecked,
+    fragmentLayer,
+    fragmentChecked,
+    surveyLayer,
+    surveyChecked,
+    speciesLayer,
+    speciesChecked
+  ])
+
+  if (selectedCountry !== prevSelectedCountry || selectedDate !== prevSelectedDate) {
+    if (tclLayer !== null && map.current.hasLayer(tclLayer)) {
+      map.current.removeLayer(tclLayer)
+      console.log("CHANGE country, remove old layer")
+    }
+
+    if (restorationLayer !== null && map.current.hasLayer(restorationLayer)) {
+      map.current.removeLayer(restorationLayer)
+    }
+
+    if (surveyLayer !== null && map.current.hasLayer(surveyLayer)) {
+      map.current.removeLayer(surveyLayer)
+    }
+
+    if (fragmentLayer !== null && map.current.hasLayer(fragmentLayer)) {
+      map.current.removeLayer(fragmentLayer)
+    }
+  }
 
   return (
     <List>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 
 import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
@@ -17,12 +17,11 @@ import usePrevious from '../../lib/usePrevious'
 
 const useStyles = makeStyles({
   formStyle: {
-    alignItems: 'start',
+    alignItems: 'start'
   },
-  root: {
-    flexGrow: 1,
+  labelStyle: {
     paddingTop: '10px'
-  },
+  }
 })
 
 const LegendIconStyle = styled('div')`
@@ -30,14 +29,18 @@ const LegendIconStyle = styled('div')`
   width: 16px;
   border-radius: 3px;
   background-color: ${props => props.bgColor};
-  margin-right: ${props => props.setMarginRight && '8px'};
+  ${props => props.setMargin && css`
+    margin: 12px 8px 0 0;
+  `}
 `
 
 const HiiLegend = styled('div')`
   height: 50px;
   width: 240px;
   border-radius: 3px;
-  background: linear-gradient(to right, rgba(156,188,161,1) 0%,rgba(211,211,139,1) 17%,rgba(232,162,109,1) 30%,rgba(175,55,0,1) 57%,rgba(156,0,170,1) 87%,rgba(0,36,0,1) 100%);;
+  background: linear-gradient(
+    to right, rgba(156,188,161,1) 0%,rgba(211,211,139,1) 17%,rgba(232,162,109,1) 30%,rgba(175,55,0,1) 57%,rgba(156,0,170,1) 87%,rgba(0,36,0,1) 100%
+  );;
 `
 
 const HiiDescription = styled('div')`
@@ -45,9 +48,13 @@ const HiiDescription = styled('div')`
   justify-content: space-between;
 `
 
-const PALabel = styled('div')`
+const RadioItem = styled('div')`
   display: inline-flex;
-  align-items: center;
+  align-items: start;
+`
+
+const RadioItemLabel = styled('span')`
+  font-size: 1rem;
   padding-top: 10px;
 `
 
@@ -79,7 +86,7 @@ const MapLayerType = ({ map, layers }) => {
       case 'Biome':
         return (
           <TreeView
-            className={classes.root}
+            className={classes.labelStyle}
             defaultCollapseIcon={<ExpandMoreIcon />}
             defaultExpandIcon={<ChevronRightIcon />}
           >
@@ -104,16 +111,15 @@ const MapLayerType = ({ map, layers }) => {
       case 'Human Influence Index':
         return (
           <TreeView
-            className={classes.root}
+            className={classes.labelStyle}
             defaultCollapseIcon={<ExpandMoreIcon />}
             defaultExpandIcon={<ChevronRightIcon />}
           >
-            <TreeItem nodeId="16" label={name}>
-              <TreeItem nodeId="17" label="Terrestrial Human Footprint Value"/>
-              <TreeItem nodeId="18" label={
+            <TreeItem nodeId="1" label={name}>
+              <TreeItem nodeId="2" label={
                 <HiiLegend />
               }/>
-              <TreeItem nodeId="19" label={
+              <TreeItem nodeId="3" label={
                 <HiiDescription>
                   <span>Low</span>
                   <span>High</span>
@@ -124,21 +130,23 @@ const MapLayerType = ({ map, layers }) => {
         )
       default:
         return (
-          <PALabel>
-            <LegendIconStyle bgColor="#16A51C" setMarginRight="true" /> {name}
-          </PALabel>)
+          <>
+            <LegendIconStyle bgColor="#16A51C" setMargin="true" /> <RadioItemLabel>{name}</RadioItemLabel>
+          </>
+        )
     }
   }
 
   const layerOptions = layerNames.map(name => {
     return (
-      <FormControlLabel
-        key={name}
-        value={name}
-        control={<Radio />}
-        label={labelFormat(name)}
-        className={classes.formStyle}
-      />
+      <RadioItem key={name}>
+        <FormControlLabel
+          value={name}
+          control={<Radio />}
+          className={classes.formStyle}
+        />
+        {labelFormat(name)}
+      </RadioItem>
     )
   })
 
@@ -146,7 +154,10 @@ const MapLayerType = ({ map, layers }) => {
     <FormControl component="fieldset" >
       <RadioGroup aria-label="gender" name="gender1" value={radioValue} onChange={handleChange}>
         {layerOptions}
-        <FormControlLabel key="None" value="None" control={<Radio />} label="None" />
+        <RadioItem>
+          <FormControlLabel key="None" value="None" control={<Radio />} />
+          <RadioItemLabel>None</RadioItemLabel>
+        </RadioItem>
       </RadioGroup>
     </FormControl>
   )

@@ -43,6 +43,7 @@ const mapStyle = makeStyles(() => ({
   drawerPaper: {
     height: 'auto',
     width: 'auto',
+    maxHeight: '80vh',
     marginTop: '49px',
     overflow: 'auto',
     borderBottomLeftRadius: '4px',

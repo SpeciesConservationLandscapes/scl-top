@@ -45,7 +45,7 @@
     "complexity": [
       "error",
       {
-        "max": 25
+        "max": 40
       }
     ],
     "default-case": "error",
@@ -108,7 +108,7 @@
     ],
     "max-depth": [
       "error",
-      3
+      4
     ],
     "max-len": [
       "error",

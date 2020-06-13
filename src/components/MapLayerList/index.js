@@ -13,7 +13,7 @@ import usePrevious from '../../lib/usePrevious'
 
 const useStyles = makeStyles(() => ({
   layerTypeStyle: {
-    borderTop: '1px solid'
+    borderTop: '1px solid',
   },
 }))
 
@@ -22,22 +22,24 @@ const MapLayerList = ({ map }) => {
   const countryContext = useContext(AppContext).countryCode
   const dateContext = useContext(AppContext).date
 
-  const [selectedCountry, setSelectedCountry] = useState('')
-  const prevSelectedCountry = usePrevious(selectedCountry)
+  const [selectedCountry, setSelectedCountry] = useState(countryContext)
   const [selectedDate, setSelectedDate] = useState('')
-  const prevSelectedDate = usePrevious((selectedDate))
 
   const species = { id: 1, name: 'Panthera tigris' }
 
   const mapLayers = new MapLayers()
   const [tclChecked, setTclChecked] = useState(true)
   const [tclLayer, setTclLayer] = useState(null)
+  const prevTclLayer = usePrevious(tclLayer)
   const [restorationChecked, setRestorationChecked] = useState(true)
   const [restorationLayer, setRestorationLayer] = useState(null)
+  const prevRestorationLayer = usePrevious(restorationLayer)
   const [surveyChecked, setSurveyChecked] = useState(true)
   const [surveyLayer, setSurveyLayer] = useState(null)
+  const prevSurveyLayer = usePrevious(surveyLayer)
   const [fragmentChecked, setFragmentChecked] = useState(true)
   const [fragmentLayer, setFragmentLayer] = useState(null)
+  const prevFragmentLayer = usePrevious(fragmentLayer)
   const [speciesChecked, setSpeciesChecked] = useState(true)
   const [speciesLayer, setSpeciesLayer] = useState(null)
   const [protectedAreaLayer, setProtectedAreaLayer] = useState(null)
@@ -50,13 +52,21 @@ const MapLayerList = ({ map }) => {
   const handleFragmentChange = e => setFragmentChecked(e.target.checked)
   const handleSpeciesChange = e => setSpeciesChecked(e.target.checked)
 
+  const handleTclLayer = layer => setTclLayer(layer)
+  const handleRestorationLayer = layer => setRestorationLayer(layer)
+  const handleSurveyLayer = layer => setSurveyLayer(layer)
+  const handleFragmentLayer = layer => setFragmentLayer(layer)
+
   const fetchLayers = (countryCode, date) => {
-    if (!(countryCode === '' || date === '')) {
-      setTclLayer(mapLayers.getTclLayer(countryCode, date, species))
-      setRestorationLayer(mapLayers.getRestorationLayer(countryCode, date, species))
-      setSurveyLayer(mapLayers.getSurveyLayer(countryCode, date, species))
-      setFragmentLayer(mapLayers.getFragmentLayer(countryCode, date, species))
-    }
+    mapLayers.getTclLayer(countryCode, date, species, handleTclLayer)
+    mapLayers.getRestorationLayer(
+      countryCode,
+      date,
+      species,
+      handleRestorationLayer,
+    )
+    mapLayers.getSurveyLayer(countryCode, date, species, handleSurveyLayer)
+    mapLayers.getFragmentLayer(countryCode, date, species, handleFragmentLayer)
   }
 
   const fetchBaseLayers = () => {
@@ -74,7 +84,18 @@ const MapLayerList = ({ map }) => {
 
   if (tclLayer !== null) {
     if (tclChecked) {
-      map.current.addLayer(tclLayer)
+      const currentLayer = tclLayer && tclLayer._leaflet_id
+      const prevLayer = prevTclLayer && prevTclLayer._leaflet_id
+
+      if (currentLayer !== prevLayer) {
+        if (prevLayer) map.current.removeLayer(prevTclLayer)
+        if (currentLayer) {
+          map.current.addLayer(tclLayer)
+          map.current.fitBounds(tclLayer.getBounds(), { padding: [25, 25] })
+        }
+      } else {
+        map.current.addLayer(tclLayer)
+      }
     } else {
       map.current.removeLayer(tclLayer)
     }
@@ -82,7 +103,15 @@ const MapLayerList = ({ map }) => {
 
   if (restorationLayer !== null) {
     if (restorationChecked) {
-      map.current.addLayer(restorationLayer)
+      const currentLayer = restorationLayer && restorationLayer._leaflet_id
+      const prevLayer = prevRestorationLayer && prevRestorationLayer._leaflet_id
+
+      if (currentLayer !== prevLayer) {
+        if (prevLayer) map.current.removeLayer(prevRestorationLayer)
+        if (currentLayer) map.current.addLayer(restorationLayer)
+      } else {
+        map.current.addLayer(restorationLayer)
+      }
     } else {
       map.current.removeLayer(restorationLayer)
     }
@@ -90,7 +119,15 @@ const MapLayerList = ({ map }) => {
 
   if (surveyLayer !== null) {
     if (surveyChecked) {
-      map.current.addLayer(surveyLayer)
+      const currentLayer = surveyLayer && surveyLayer._leaflet_id
+      const prevLayer = prevSurveyLayer && prevSurveyLayer._leaflet_id
+
+      if (currentLayer !== prevLayer) {
+        if (prevLayer) map.current.removeLayer(prevSurveyLayer)
+        if (currentLayer) map.current.addLayer(surveyLayer)
+      } else {
+        map.current.addLayer(surveyLayer)
+      }
     } else {
       map.current.removeLayer(surveyLayer)
     }
@@ -98,7 +135,15 @@ const MapLayerList = ({ map }) => {
 
   if (fragmentLayer !== null) {
     if (fragmentChecked) {
-      map.current.addLayer(fragmentLayer)
+      const currentLayer = fragmentLayer && fragmentLayer._leaflet_id
+      const prevLayer = prevFragmentLayer && prevFragmentLayer._leaflet_id
+
+      if (currentLayer !== prevLayer) {
+        if (prevLayer) map.current.removeLayer(prevFragmentLayer)
+        if (currentLayer) map.current.addLayer(fragmentLayer)
+      } else {
+        map.current.addLayer(fragmentLayer)
+      }
     } else {
       map.current.removeLayer(fragmentLayer)
     }
@@ -109,24 +154,6 @@ const MapLayerList = ({ map }) => {
       map.current.addLayer(speciesLayer)
     } else {
       map.current.removeLayer(speciesLayer)
-    }
-  }
-
-  if (selectedCountry !== prevSelectedCountry || selectedDate !== prevSelectedDate) {
-    if (tclLayer !== null && map.current.hasLayer(tclLayer)) {
-      map.current.removeLayer(tclLayer)
-    }
-
-    if (restorationLayer !== null && map.current.hasLayer(restorationLayer)) {
-      map.current.removeLayer(restorationLayer)
-    }
-
-    if (surveyLayer !== null && map.current.hasLayer(surveyLayer)) {
-      map.current.removeLayer(surveyLayer)
-    }
-
-    if (fragmentLayer !== null && map.current.hasLayer(fragmentLayer)) {
-      map.current.removeLayer(fragmentLayer)
     }
   }
 
@@ -153,22 +180,54 @@ const MapLayerList = ({ map }) => {
   return (
     <List>
       <ListItem>
-        <MapLayerItem layerChecked={tclChecked} handleLayerChange={handleTclChange} label="Tiger Conservation Landscape" legendStyle={{ bgColor: "#B2B4C8", borderColor: "#140BEB" }} />
+        <MapLayerItem
+          layerChecked={tclChecked}
+          handleLayerChange={handleTclChange}
+          label="Tiger Conservation Landscape"
+          legendStyle={{ bgColor: '#B2B4C8', borderColor: '#140BEB' }}
+        />
       </ListItem>
       <ListItem>
-        <MapLayerItem layerChecked={restorationChecked} handleLayerChange={handleRestorationChange} label="Tiger Restoration Landscape" legendStyle={{ bgColor: "#D5EBFA", borderColor: "#2C9EEB" }} />
+        <MapLayerItem
+          layerChecked={restorationChecked}
+          handleLayerChange={handleRestorationChange}
+          label="Tiger Restoration Landscape"
+          legendStyle={{ bgColor: '#D5EBFA', borderColor: '#2C9EEB' }}
+        />
       </ListItem>
       <ListItem>
-        <MapLayerItem layerChecked={surveyChecked} handleLayerChange={handleSurveyChange} label="Tiger Survey Landscape" legendStyle={{ bgColor: "#E4CAEF", borderColor: "#9C1EEB" }} />
+        <MapLayerItem
+          layerChecked={surveyChecked}
+          handleLayerChange={handleSurveyChange}
+          label="Tiger Survey Landscape"
+          legendStyle={{ bgColor: '#E4CAEF', borderColor: '#9C1EEB' }}
+        />
       </ListItem>
       <ListItem>
-        <MapLayerItem layerChecked={fragmentChecked} handleLayerChange={handleFragmentChange} label="Tiger Fragment Landscape" legendStyle={{ bgColor: "#DDCE9B", borderColor: "#EB5423" }} />
+        <MapLayerItem
+          layerChecked={fragmentChecked}
+          handleLayerChange={handleFragmentChange}
+          label="Tiger Fragment Landscape"
+          legendStyle={{ bgColor: '#DDCE9B', borderColor: '#EB5423' }}
+        />
       </ListItem>
       <ListItem>
-        <MapLayerItem layerChecked={speciesChecked} handleLayerChange={handleSpeciesChange} label="Tiger Historical Landscape" legendStyle={{ bgColor: "white", borderColor: "black" }} />
+        <MapLayerItem
+          layerChecked={speciesChecked}
+          handleLayerChange={handleSpeciesChange}
+          label="Tiger Historical Landscape"
+          legendStyle={{ bgColor: 'white', borderColor: 'black' }}
+        />
       </ListItem>
       <ListItem className={classes.layerTypeStyle}>
-        <MapLayerType map={map} layers={{ "Protected Area": protectedAreaLayer, "Biome": biomeLayer, "Human Influence Index": hiiLayer }} />
+        <MapLayerType
+          map={map}
+          layers={{
+            'Protected Area': protectedAreaLayer,
+            Biome: biomeLayer,
+            'Human Influence Index': hiiLayer,
+          }}
+        />
       </ListItem>
     </List>
   )
@@ -176,8 +235,8 @@ const MapLayerList = ({ map }) => {
 
 MapLayerList.propTypes = {
   map: PropTypes.shape({
-    current: PropTypes.object
-  }).isRequired
+    current: PropTypes.object,
+  }).isRequired,
 }
 
 export default MapLayerList

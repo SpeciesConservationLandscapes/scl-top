@@ -142,6 +142,12 @@ class MapLayers {
 
     return new SecureTileLayer(url, this.defaultTileLayerConfig)
   }
+
+  downloadReport(country, date) {
+    const url = `${API_ROOT}/reports/species/?country=${country}&species=1&date=${date}`
+
+    window.open(this.api.getLink(url))
+  }
 }
 
 export default MapLayers

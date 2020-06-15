@@ -16,6 +16,12 @@ class SecureApi {
 
     return axios.get(url, config)
   }
+
+  getLink(url) {
+    const { token } = this.tokenUtil
+
+    return `${url}&access_token=${token}`
+  }
 }
 
 export default SecureApi

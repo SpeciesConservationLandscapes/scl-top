@@ -20,7 +20,7 @@ class MapLayers {
     return this.tokenUtil.token
   }
 
-  getTclLayer(country, date, species, setLayer) {
+  getTclLayer(country, date, species, setLayer, map) {
     const speciesId = species.id
     const url = `${API_ROOT}/sclstats/?country=${country}&scl__date=${date}&scl__species=${speciesId}`
     const tclLayer = L.geoJSON(null, {
@@ -48,6 +48,7 @@ class MapLayers {
 
     this.api.getData(url).then(resp => {
       tclLayer.addData(resp.data)
+      map.fitBounds(tclLayer.getBounds(), { padding: [30, 30] })
       setLayer(tclLayer)
     })
 

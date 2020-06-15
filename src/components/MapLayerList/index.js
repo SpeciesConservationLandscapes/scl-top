@@ -58,7 +58,13 @@ const MapLayerList = ({ map }) => {
   const handleFragmentLayer = layer => setFragmentLayer(layer)
 
   const fetchLayers = (countryCode, date) => {
-    mapLayers.getTclLayer(countryCode, date, species, handleTclLayer)
+    mapLayers.getTclLayer(
+      countryCode,
+      date,
+      species,
+      handleTclLayer,
+      map.current,
+    )
     mapLayers.getRestorationLayer(
       countryCode,
       date,
@@ -91,7 +97,6 @@ const MapLayerList = ({ map }) => {
         if (prevLayer) map.current.removeLayer(prevTclLayer)
         if (currentLayer) {
           map.current.addLayer(tclLayer)
-          map.current.fitBounds(tclLayer.getBounds(), { padding: [25, 25] })
         }
       } else {
         map.current.addLayer(tclLayer)
@@ -108,7 +113,9 @@ const MapLayerList = ({ map }) => {
 
       if (currentLayer !== prevLayer) {
         if (prevLayer) map.current.removeLayer(prevRestorationLayer)
-        if (currentLayer) map.current.addLayer(restorationLayer)
+        if (currentLayer) {
+          map.current.addLayer(restorationLayer)
+        }
       } else {
         map.current.addLayer(restorationLayer)
       }
@@ -124,7 +131,9 @@ const MapLayerList = ({ map }) => {
 
       if (currentLayer !== prevLayer) {
         if (prevLayer) map.current.removeLayer(prevSurveyLayer)
-        if (currentLayer) map.current.addLayer(surveyLayer)
+        if (currentLayer) {
+          map.current.addLayer(surveyLayer)
+        }
       } else {
         map.current.addLayer(surveyLayer)
       }
@@ -140,7 +149,9 @@ const MapLayerList = ({ map }) => {
 
       if (currentLayer !== prevLayer) {
         if (prevLayer) map.current.removeLayer(prevFragmentLayer)
-        if (currentLayer) map.current.addLayer(fragmentLayer)
+        if (currentLayer) {
+          map.current.addLayer(fragmentLayer)
+        }
       } else {
         map.current.addLayer(fragmentLayer)
       }

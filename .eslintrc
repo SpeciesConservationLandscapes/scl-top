@@ -127,7 +127,7 @@
     ],
     "max-params": [
       "error",
-      4
+      5
     ],
     "new-cap": "off",
     "newline-after-var": [

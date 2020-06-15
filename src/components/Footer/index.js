@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
@@ -6,6 +6,9 @@ import { useAuth0 } from '../../react-auth0-spa'
 import Copyright from '../Copyright'
 import OrgsPanel from '../OrgsPanel'
 import CountrySelector from '../CountrySelector'
+import MapLayers from '../../lib/maplayers'
+import { AppContext } from '../../contexts'
+import { dateFormat } from '../../helpers'
 
 const footerStyles = makeStyles(theme => ({
   footer: {
@@ -29,9 +32,15 @@ const footerStyles = makeStyles(theme => ({
 
 const Footer = () => {
   const classes = footerStyles()
+  const countryContext = useContext(AppContext).countryCode
+  const dateContext = useContext(AppContext).date
+  const mapLayers = new MapLayers()
   const { isAuthenticated } = useAuth0()
+
   const downloadReport = () => {
-    alert('Download reporting')
+    const date = dateFormat(dateContext)
+
+    mapLayers.downloadReport(countryContext, date)
   }
 
   return (

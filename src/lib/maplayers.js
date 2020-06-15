@@ -20,7 +20,7 @@ class MapLayers {
     return this.tokenUtil.token
   }
 
-  getTclLayer(country, date, species) {
+  getTclLayer(country, date, species, setLayer, map) {
     const speciesId = species.id
     const url = `${API_ROOT}/sclstats/?country=${country}&scl__date=${date}&scl__species=${speciesId}`
     const tclLayer = L.geoJSON(null, {
@@ -48,12 +48,14 @@ class MapLayers {
 
     this.api.getData(url).then(resp => {
       tclLayer.addData(resp.data)
+      map.fitBounds(tclLayer.getBounds(), { padding: [30, 30] })
+      setLayer(tclLayer)
     })
 
     return tclLayer
   }
 
-  getRestorationLayer(country, date, species) {
+  getRestorationLayer(country, date, species, setLayer) {
     const speciesId = species.id
     const url = `${API_ROOT}/restorationls_stats/?country=${country}&restoration_landscape__date=${date}&restoration_landscape__species=${speciesId}`
     const restorationLayer = L.geoJSON(null, {
@@ -68,12 +70,13 @@ class MapLayers {
 
     this.api.getData(url).then(resp => {
       restorationLayer.addData(resp.data)
+      setLayer(restorationLayer)
     })
 
     return restorationLayer
   }
 
-  getSurveyLayer(country, date, species) {
+  getSurveyLayer(country, date, species, setLayer) {
     const speciesId = species.id
     const url = `${API_ROOT}/surveyls_stats/?country=${country}&survey_landscape__date=${date}&survey_landscape__species=${speciesId}`
     const surveyLayer = L.geoJSON(null, {
@@ -88,12 +91,13 @@ class MapLayers {
 
     this.api.getData(url).then(resp => {
       surveyLayer.addData(resp.data)
+      setLayer(surveyLayer)
     })
 
     return surveyLayer
   }
 
-  getFragmentLayer(country, date, species) {
+  getFragmentLayer(country, date, species, setLayer) {
     const speciesId = species.id
     const url = `${API_ROOT}/fragmentstats/?country=${country}&fragment__date=${date}&fragment__species=${speciesId}`
     const fragmentLayer = L.geoJSON(null, {
@@ -108,6 +112,7 @@ class MapLayers {
 
     this.api.getData(url).then(resp => {
       fragmentLayer.addData(resp.data)
+      setLayer(fragmentLayer)
     })
 
     return fragmentLayer
@@ -136,6 +141,12 @@ class MapLayers {
     const url = `${TILE_API_ROOT}/tiles/species/${speciesSlug}/{z}/{x}/{y}/`
 
     return new SecureTileLayer(url, this.defaultTileLayerConfig)
+  }
+
+  downloadReport(country, date) {
+    const url = `${API_ROOT}/reports/species/?country=${country}&species=1&date=${date}`
+
+    window.open(this.api.getLink(url))
   }
 }
 

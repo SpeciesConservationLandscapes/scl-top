@@ -166,6 +166,10 @@ const MapLayerList = ({ map }) => {
     } else {
       map.current.removeLayer(speciesLayer)
     }
+
+    if (map.current.hasLayer(speciesLayer)) {
+      speciesLayer.bringToFront()
+    }
   }
 
   useEffect(() => {

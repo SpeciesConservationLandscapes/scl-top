@@ -48,7 +48,11 @@ class MapLayers {
 
     this.api.getData(url).then(resp => {
       tclLayer.addData(resp.data)
-      map.fitBounds(tclLayer.getBounds(), { padding: [30, 30] })
+      const bounds = tclLayer.getBounds()
+
+      if (bounds.isValid()) {
+        map.fitBounds(bounds, { padding: [30, 30] })
+      }
       setLayer(tclLayer)
     })
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -22,8 +22,8 @@ const countryStyle = makeStyles(theme => ({
 
 const CountrySelector = () => {
   const classes = countryStyle()
-  const context = React.useContext(AppContext)
-  const [countries, setCountries] = React.useState([])
+  const context = useContext(AppContext)
+  const [countries, setCountries] = useState([])
   const { isAuthenticated } = useAuth0()
   const profile = new Profile()
 
@@ -33,7 +33,7 @@ const CountrySelector = () => {
     context.setCountryCode(code)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     profile.getCountries().then(_countries => {
       setCountries(_countries)
       if (_countries && _countries.length > 0) {

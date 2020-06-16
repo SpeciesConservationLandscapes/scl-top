@@ -8,6 +8,7 @@ import MapLayerItem from '../MapLayerItem'
 import MapLayerType from '../MapLayerType'
 import MapLayers from '../../lib/maplayers'
 import { AppContext } from '../../contexts'
+import { dateFormat } from '../../helpers'
 
 import usePrevious from '../../lib/usePrevious'
 
@@ -21,9 +22,6 @@ const MapLayerList = ({ map }) => {
   const classes = useStyles()
   const countryContext = useContext(AppContext).countryCode
   const dateContext = useContext(AppContext).date
-
-  const [selectedCountry, setSelectedCountry] = useState(countryContext)
-  const [selectedDate, setSelectedDate] = useState('')
 
   const species = { id: 1, name: 'Panthera tigris' }
 
@@ -80,12 +78,6 @@ const MapLayerList = ({ map }) => {
     setProtectedAreaLayer(mapLayers.getProtectedAreaLayer())
     setBiomeLayer(mapLayers.getBiomeLayer())
     setHiiLayer(mapLayers.geHiiLayer())
-  }
-
-  const dateConversion = date => {
-    const datePart = date.split('/')
-
-    return `${datePart[2]}-${datePart[1]}-${datePart[0]}`
   }
 
   if (tclLayer !== null) {
@@ -177,20 +169,19 @@ const MapLayerList = ({ map }) => {
   }, [])
 
   useEffect(() => {
-    if (countryContext !== '') {
-      setSelectedCountry(countryContext)
-    }
+    if (
+      !(
+        countryContext === null ||
+        countryContext === '' ||
+        dateContext === null ||
+        dateContext === ''
+      )
+    ) {
+      const date = dateFormat(dateContext)
 
-    if (dateContext !== '') {
-      setSelectedDate(dateConversion(dateContext))
+      fetchLayers(countryContext, date)
     }
   }, [countryContext, dateContext])
-
-  useEffect(() => {
-    if (!(selectedCountry === '' || selectedDate === '')) {
-      fetchLayers(selectedCountry, selectedDate)
-    }
-  }, [selectedCountry, selectedDate])
 
   return (
     <List>

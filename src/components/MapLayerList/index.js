@@ -22,6 +22,7 @@ const MapLayerList = ({ map }) => {
   const classes = useStyles()
   const countryContext = useContext(AppContext).countryCode
   const dateContext = useContext(AppContext).date
+  const prevDateContext = usePrevious(dateContext)
 
   const species = { id: 1, name: 'Panthera tigris' }
 
@@ -170,12 +171,8 @@ const MapLayerList = ({ map }) => {
 
   useEffect(() => {
     if (
-      !(
-        countryContext === null ||
-        countryContext === '' ||
-        dateContext === null ||
-        dateContext === ''
-      )
+      !(countryContext === null || countryContext === '') &&
+      prevDateContext !== dateContext
     ) {
       const date = dateFormat(dateContext)
 

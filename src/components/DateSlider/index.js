@@ -8,11 +8,9 @@ import AvailabelDate from '../../lib/availabledate'
 import { AppContext } from '../../contexts'
 
 const DateSliderBox = styled(Box)`
-  padding: 20px 40px 0 40px;
-  background: linear-gradient(
-    rgba(0, 0, 0, 0.1),
-    #EEEEEE
-  );
+  padding: ${props =>
+    props.datelength > 0 ? '20px 40px 0 40px' : '20px 40px 13px 40px'};
+  background: linear-gradient(rgba(0, 0, 0, 0.1), #eeeeee);
 `
 
 const iOSBoxShadow =
@@ -32,7 +30,8 @@ const IOSSlider = withStyles({
     marginTop: -7,
     marginLeft: -7,
     '&:focus,&:hover,&$active': {
-      boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.02)',
+      boxShadow:
+        '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.02)',
       // Reset on touch devices, it doesn't add specificity
       '@media (hover: none)': {
         boxShadow: iOSBoxShadow,
@@ -71,25 +70,27 @@ const IOSSlider = withStyles({
 const DateSlider = () => {
   const countryContext = useContext(AppContext).countryCode
   const context = useContext(AppContext)
-  const [selectedCountry, setSelectedCountry] = useState(null)
 
   const species = { id: 1, name: 'Panthera tigris' }
   const availableDate = new AvailabelDate()
-  const [dates, setDates] = useState([])
   const [dateValue, setDateValue] = useState([])
-  const [selectedDate, setSelectedDate] = useState('')
+  const [sliderValue, setSliderValue] = useState(100)
 
   const convertNewDate = date => {
     const datePart = date.split('-')
 
-    return new Date(Number(datePart[0]), Number(datePart[1]) - 1, Number(datePart[2]))
+    return new Date(
+      Number(datePart[0]),
+      Number(datePart[1]) - 1,
+      Number(datePart[2]),
+    )
   }
 
   const calRelativeValue = (min, max, n) => {
     const numerator = n - min
     const denominator = max - min
 
-    return numerator / denominator * 100
+    return (numerator / denominator) * 100
   }
 
   const dateMarksFormat = array => {
@@ -100,14 +101,17 @@ const DateSlider = () => {
     let result = []
 
     if (valueLength === 1) {
-      result.push({ value: 100, label: convertNewDate(array[0]).toLocaleDateString() })
+      result.push({
+        value: 100,
+        label: convertNewDate(array[0]).toLocaleDateString(),
+      })
     } else {
       result = array.map(date => {
         const dateTime = new Date(date).getTime()
 
         return {
           value: calRelativeValue(firstDate, lastDate, dateTime),
-          label: convertNewDate(date).toLocaleDateString()
+          label: convertNewDate(date).toLocaleDateString(),
         }
       })
     }
@@ -115,45 +119,40 @@ const DateSlider = () => {
     return result
   }
 
-  const getCurrentDate = currentDate => {
+  const handleSliderChange = (event, newVal) => {
+    setSliderValue(newVal)
     dateValue.forEach(e => {
-      if (currentDate === e.value) {
-        setSelectedDate(e.label)
+      if (newVal === e.value) {
+        context.setDate(e.label)
       }
     })
   }
 
   useEffect(() => {
-    setSelectedCountry(countryContext)
-  }, [countryContext])
+    if (!(countryContext === null || countryContext === '')) {
+      availableDate.getDate(countryContext, species).then(date => {
+        const dateData = date.data
 
-  useEffect(() => {
-    if (!(selectedCountry === null || selectedCountry === '')) {
-      availableDate.getDate(selectedCountry, species).then(date => {
-        setDates(date.data)
+        const dateFormat =
+          dateData.length > 0 ? dateMarksFormat(dateData) : dateData
+
+        const dateLabel =
+          dateFormat.length > 0 ? dateFormat[dateFormat.length - 1].label : ''
+
+        setDateValue(dateFormat)
+        setSliderValue(100)
+        context.setDate(dateLabel)
       })
     }
-  }, [selectedCountry])
-
-  useEffect(() => {
-    if (dates.length > 0) {
-      const newDate = dateMarksFormat(dates)
-
-      setDateValue(newDate)
-    }
-  }, [dates])
-
-  useEffect(() => {
-    context.setDate(selectedDate)
-  }, [selectedDate])
+  }, [countryContext])
 
   return (
-    <DateSliderBox>
+    <DateSliderBox datelength={dateValue.length}>
       <IOSSlider
-        defaultValue={100}
+        value={sliderValue}
+        onChange={handleSliderChange}
         aria-labelledby="discrete-slider-restrict"
         step={null}
-        getAriaValueText={getCurrentDate}
         marks={dateValue}
       />
     </DateSliderBox>

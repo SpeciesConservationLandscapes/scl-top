@@ -3,12 +3,8 @@ import PropTypes from 'prop-types'
 import { Route } from 'react-router-dom'
 import { useAuth0 } from '../../react-auth0-spa'
 
-const PrivateRoute = ({ Component, path, ...rest }) => {
-  const {
-    loading,
-    isAuthenticated,
-    loginWithRedirect,
-  } = useAuth0()
+const PrivateRoute = ({ component: Component, path, ...rest }) => {
+  const { loading, isAuthenticated, loginWithRedirect } = useAuth0()
 
   useEffect(() => {
     if (loading || isAuthenticated) {
@@ -33,11 +29,11 @@ const PrivateRoute = ({ Component, path, ...rest }) => {
 export default PrivateRoute
 
 PrivateRoute.defaultProps = {
-  Component: '',
+  component: '',
   path: '/home',
 }
 
 PrivateRoute.propTypes = {
-  Component: PropTypes.node,
+  component: PropTypes.elementType,
   path: PropTypes.string,
 }

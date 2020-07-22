@@ -171,7 +171,9 @@ const MapLayerList = ({ map }) => {
   useEffect(() => {
     const date = dateFormat(dateContext)
 
-    fetchLayers(countryContext, date)
+    if (!(countryContext === null || countryContext === '')) {
+      fetchLayers(countryContext, date)
+    }
   }, [countryContext, dateContext])
 
   return (

@@ -43,6 +43,8 @@ const MapLayerList = ({ map }) => {
   const [protectedAreaLayer, setProtectedAreaLayer] = useState(null)
   const [biomeLayer, setBiomeLayer] = useState(null)
   const [hiiLayer, setHiiLayer] = useState(null)
+  const [baseLayerChange, setBaseLayerChange] = useState(false)
+  const [radioValue, setRadioValue] = useState('None')
 
   const handleTclChange = e => setTclChecked(e.target.checked)
   const handleRestorationChange = e => setRestorationChecked(e.target.checked)
@@ -54,6 +56,7 @@ const MapLayerList = ({ map }) => {
   const handleRestorationLayer = layer => setRestorationLayer(layer)
   const handleSurveyLayer = layer => setSurveyLayer(layer)
   const handleFragmentLayer = layer => setFragmentLayer(layer)
+  const handleRadioChange = event => setRadioValue(event.target.value)
 
   const fetchLayers = (countryCode, date) => {
     mapLayers.getTclLayer(
@@ -73,11 +76,21 @@ const MapLayerList = ({ map }) => {
     mapLayers.getFragmentLayer(countryCode, date, species, handleFragmentLayer)
   }
 
-  const fetchBaseLayers = () => {
+  const fetchBaseLayers = date => {
     setSpeciesLayer(mapLayers.getTigerHistoricalRangeLayer(species))
     setProtectedAreaLayer(mapLayers.getProtectedAreaLayer())
     setBiomeLayer(mapLayers.getBiomeLayer())
-    setHiiLayer(mapLayers.geHiiLayer())
+    setHiiLayer(mapLayers.geHiiLayer(date))
+  }
+
+  if (
+    hiiLayer !== null &&
+    baseLayerChange &&
+    radioValue === 'Human Influence Index'
+  ) {
+    map.current.removeLayer(hiiLayer)
+    map.current.addLayer(hiiLayer)
+    setBaseLayerChange(false)
   }
 
   if (tclLayer !== null) {
@@ -165,8 +178,11 @@ const MapLayerList = ({ map }) => {
   }
 
   useEffect(() => {
-    fetchBaseLayers()
-  }, [])
+    const date = dateFormat(dateContext)
+
+    setBaseLayerChange(true)
+    fetchBaseLayers(date)
+  }, [dateContext])
 
   useEffect(() => {
     const date = dateFormat(dateContext)
@@ -226,6 +242,8 @@ const MapLayerList = ({ map }) => {
             Biome: biomeLayer,
             'Human Influence Index': hiiLayer,
           }}
+          radioValue={radioValue}
+          handleRadioChange={handleRadioChange}
         />
       </ListItem>
     </List>

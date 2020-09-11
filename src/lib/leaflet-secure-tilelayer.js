@@ -7,10 +7,15 @@ const SecureTileLayer = L.TileLayer.extend({
   initialize: function(url, options) {
     L.TileLayer.prototype.initialize.call(this, url, options)
     this.token = options.token
+    this.date = options.date && options.date
   },
   getTileUrl: function(coords) {
+    const params = this.date
+      ? { date: this.date, access_token: this.token }
+      : { access_token: this.token }
     const url = L.TileLayer.prototype.getTileUrl.call(this, coords)
-    const qp = L.Util.getParamString({ access_token: this.token }, url)
+
+    const qp = L.Util.getParamString(params, url)
 
     return `${url.split('?')[0]}${qp}`
   },

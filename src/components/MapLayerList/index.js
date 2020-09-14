@@ -89,6 +89,24 @@ const MapLayerList = ({ map }) => {
     setStructuralHabitatLayer(mapLayers.getStructuralHabitat(species, date))
   }
 
+  const layerManagement = (curLayer, prevLayer, layerChecked) => {
+    if (layerChecked) {
+      const currentLayer = curLayer && curLayer._leaflet_id
+      const previousLayer = prevLayer && prevLayer._leaflet_id
+
+      if (currentLayer !== previousLayer) {
+        if (previousLayer) map.current.removeLayer(prevLayer)
+        if (currentLayer) {
+          map.current.addLayer(curLayer)
+        }
+      } else {
+        map.current.addLayer(curLayer)
+      }
+    } else {
+      map.current.removeLayer(curLayer)
+    }
+  }
+
   if (
     hiiLayer !== null &&
     baseLayerChange &&
@@ -109,97 +127,19 @@ const MapLayerList = ({ map }) => {
     setSHBaseLayerChange(false)
   }
 
-  if (tclLayer !== null) {
-    if (tclChecked) {
-      const currentLayer = tclLayer && tclLayer._leaflet_id
-      const prevLayer = prevTclLayer && prevTclLayer._leaflet_id
+  if (tclLayer !== null) layerManagement(tclLayer, prevTclLayer, tclChecked)
 
-      if (currentLayer !== prevLayer) {
-        if (prevLayer) map.current.removeLayer(prevTclLayer)
-        if (currentLayer) {
-          map.current.addLayer(tclLayer)
-        }
-      } else {
-        map.current.addLayer(tclLayer)
-      }
-    } else {
-      map.current.removeLayer(tclLayer)
-    }
-  }
+  if (restorationLayer !== null)
+    layerManagement(restorationLayer, prevRestorationLayer, restorationChecked)
 
-  if (restorationLayer !== null) {
-    if (restorationChecked) {
-      const currentLayer = restorationLayer && restorationLayer._leaflet_id
-      const prevLayer = prevRestorationLayer && prevRestorationLayer._leaflet_id
+  if (surveyLayer !== null)
+    layerManagement(surveyLayer, prevSurveyLayer, surveyChecked)
 
-      if (currentLayer !== prevLayer) {
-        if (prevLayer) map.current.removeLayer(prevRestorationLayer)
-        if (currentLayer) {
-          map.current.addLayer(restorationLayer)
-        }
-      } else {
-        map.current.addLayer(restorationLayer)
-      }
-    } else {
-      map.current.removeLayer(restorationLayer)
-    }
-  }
+  if (fragmentLayer !== null)
+    layerManagement(fragmentLayer, prevFragmentLayer, fragmentChecked)
 
-  if (surveyLayer !== null) {
-    if (surveyChecked) {
-      const currentLayer = surveyLayer && surveyLayer._leaflet_id
-      const prevLayer = prevSurveyLayer && prevSurveyLayer._leaflet_id
-
-      if (currentLayer !== prevLayer) {
-        if (prevLayer) map.current.removeLayer(prevSurveyLayer)
-        if (currentLayer) {
-          map.current.addLayer(surveyLayer)
-        }
-      } else {
-        map.current.addLayer(surveyLayer)
-      }
-    } else {
-      map.current.removeLayer(surveyLayer)
-    }
-  }
-
-  if (fragmentLayer !== null) {
-    if (fragmentChecked) {
-      const currentLayer = fragmentLayer && fragmentLayer._leaflet_id
-      const prevLayer = prevFragmentLayer && prevFragmentLayer._leaflet_id
-
-      if (currentLayer !== prevLayer) {
-        if (prevLayer) map.current.removeLayer(prevFragmentLayer)
-        if (currentLayer) {
-          map.current.addLayer(fragmentLayer)
-        }
-      } else {
-        map.current.addLayer(fragmentLayer)
-      }
-    } else {
-      map.current.removeLayer(fragmentLayer)
-    }
-  }
-
-  if (speciesLayer !== null) {
-    if (speciesChecked) {
-      const currentLayer = speciesLayer && speciesLayer._leaflet_id
-      const prevLayer = prevSpeciesLayer && prevSpeciesLayer._leaflet_id
-
-      if (currentLayer !== prevLayer) {
-        if (prevLayer) map.current.removeLayer(prevSpeciesLayer)
-        if (currentLayer) {
-          map.current.addLayer(speciesLayer)
-        }
-      } else {
-        map.current.addLayer(speciesLayer)
-      }
-
-      speciesLayer.bringToFront()
-    } else {
-      map.current.removeLayer(speciesLayer)
-    }
-  }
+  if (speciesLayer !== null)
+    layerManagement(speciesLayer, prevSpeciesLayer, speciesChecked)
 
   useEffect(() => {
     const date = dateFormat(dateContext)

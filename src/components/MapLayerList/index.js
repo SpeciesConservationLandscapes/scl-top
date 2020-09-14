@@ -45,7 +45,9 @@ const MapLayerList = ({ map }) => {
   const [hiiLayer, setHiiLayer] = useState(null)
   const prevHiiLayer = usePrevious(hiiLayer)
   const [structuralHabitatLayer, setStructuralHabitatLayer] = useState(null)
+  const prevStructuralHabitatLayer = usePrevious(structuralHabitatLayer)
   const [baseLayerChange, setBaseLayerChange] = useState(false)
+  const [sHBaseLayerChange, setSHBaseLayerChange] = useState(false)
   const [radioValue, setRadioValue] = useState('None')
 
   const handleTclChange = e => setTclChecked(e.target.checked)
@@ -83,7 +85,7 @@ const MapLayerList = ({ map }) => {
     setProtectedAreaLayer(mapLayers.getProtectedAreaLayer())
     setBiomeLayer(mapLayers.getBiomeLayer())
     setHiiLayer(mapLayers.geHiiLayer(date))
-    setStructuralHabitatLayer(mapLayers.getStructuralHabitat(species))
+    setStructuralHabitatLayer(mapLayers.getStructuralHabitat(species, date))
   }
 
   if (
@@ -94,6 +96,16 @@ const MapLayerList = ({ map }) => {
     map.current.removeLayer(prevHiiLayer)
     map.current.addLayer(hiiLayer)
     setBaseLayerChange(false)
+  }
+
+  if (
+    structuralHabitatLayer !== null &&
+    sHBaseLayerChange &&
+    radioValue === 'Structural Habitat'
+  ) {
+    map.current.removeLayer(prevStructuralHabitatLayer)
+    map.current.addLayer(structuralHabitatLayer)
+    setSHBaseLayerChange(false)
   }
 
   if (tclLayer !== null) {
@@ -184,6 +196,7 @@ const MapLayerList = ({ map }) => {
     const date = dateFormat(dateContext)
 
     setBaseLayerChange(true)
+    setSHBaseLayerChange(true)
     fetchBaseLayers(date)
   }, [dateContext])
 

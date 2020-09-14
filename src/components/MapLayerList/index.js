@@ -44,6 +44,7 @@ const MapLayerList = ({ map }) => {
   const [biomeLayer, setBiomeLayer] = useState(null)
   const [hiiLayer, setHiiLayer] = useState(null)
   const prevHiiLayer = usePrevious(hiiLayer)
+  const [structuralHabitatLayer, setStructuralHabitatLayer] = useState(null)
   const [baseLayerChange, setBaseLayerChange] = useState(false)
   const [radioValue, setRadioValue] = useState('None')
 
@@ -82,6 +83,7 @@ const MapLayerList = ({ map }) => {
     setProtectedAreaLayer(mapLayers.getProtectedAreaLayer())
     setBiomeLayer(mapLayers.getBiomeLayer())
     setHiiLayer(mapLayers.geHiiLayer(date))
+    setStructuralHabitatLayer(mapLayers.getStructuralHabitat(species))
   }
 
   if (
@@ -240,6 +242,7 @@ const MapLayerList = ({ map }) => {
           map={map}
           layers={{
             'Protected Area': protectedAreaLayer,
+            'Structural Habitat': structuralHabitatLayer,
             Biome: biomeLayer,
             'Human Influence Index': hiiLayer,
           }}

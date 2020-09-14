@@ -150,6 +150,13 @@ class MapLayers {
     return new SecureTileLayer(url, this.defaultTileLayerConfig)
   }
 
+  getStructuralHabitat(species) {
+    const speciesSlug = species.name.replace(' ', '_')
+    const url = `${TILE_API_ROOT}/tiles/species/${speciesSlug}/structural_habitat/{z}/{x}/{y}/`
+
+    return new SecureTileLayer(url, this.defaultTileLayerConfig)
+  }
+
   downloadReport(country, date) {
     const url = `${API_ROOT}/reports/species/?country=${country}&species=1&date=${date}`
 

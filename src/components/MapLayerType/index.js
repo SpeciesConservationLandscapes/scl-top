@@ -188,10 +188,17 @@ const MapLayerType = ({ map, layers, radioValue, handleRadioChange }) => {
             </TreeItem>
           </TreeView>
         )
+      // case 'Structural Habitat':
+      //   return (
+      //     <>
+      //       <LegendIconStyle bgColor="#009900" setMargin="true" />{' '}
+      //       <RadioItemLabel>{name}</RadioItemLabel>
+      //     </>
+      //   )
       default:
         return (
           <>
-            <LegendIconStyle bgColor="#16A51C" setMargin="true" />{' '}
+            <LegendIconStyle bgColor="#009900" setMargin="true" />{' '}
             <RadioItemLabel>{name}</RadioItemLabel>
           </>
         )

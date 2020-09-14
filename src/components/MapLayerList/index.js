@@ -40,6 +40,7 @@ const MapLayerList = ({ map }) => {
   const prevFragmentLayer = usePrevious(fragmentLayer)
   const [speciesChecked, setSpeciesChecked] = useState(true)
   const [speciesLayer, setSpeciesLayer] = useState(null)
+  const prevSpeciesLayer = usePrevious(speciesLayer)
   const [protectedAreaLayer, setProtectedAreaLayer] = useState(null)
   const [biomeLayer, setBiomeLayer] = useState(null)
   const [hiiLayer, setHiiLayer] = useState(null)
@@ -182,13 +183,21 @@ const MapLayerList = ({ map }) => {
 
   if (speciesLayer !== null) {
     if (speciesChecked) {
-      map.current.addLayer(speciesLayer)
+      const currentLayer = speciesLayer && speciesLayer._leaflet_id
+      const prevLayer = prevSpeciesLayer && prevSpeciesLayer._leaflet_id
+
+      if (currentLayer !== prevLayer) {
+        if (prevLayer) map.current.removeLayer(prevSpeciesLayer)
+        if (currentLayer) {
+          map.current.addLayer(speciesLayer)
+        }
+      } else {
+        map.current.addLayer(speciesLayer)
+      }
+
+      speciesLayer.bringToFront()
     } else {
       map.current.removeLayer(speciesLayer)
-    }
-
-    if (map.current.hasLayer(speciesLayer)) {
-      speciesLayer.bringToFront()
     }
   }
 

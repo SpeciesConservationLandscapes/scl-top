@@ -43,6 +43,7 @@ const MapLayerList = ({ map }) => {
   const [protectedAreaLayer, setProtectedAreaLayer] = useState(null)
   const [biomeLayer, setBiomeLayer] = useState(null)
   const [hiiLayer, setHiiLayer] = useState(null)
+  const prevHiiLayer = usePrevious(hiiLayer)
   const [baseLayerChange, setBaseLayerChange] = useState(false)
   const [radioValue, setRadioValue] = useState('None')
 
@@ -88,7 +89,7 @@ const MapLayerList = ({ map }) => {
     baseLayerChange &&
     radioValue === 'Human Influence Index'
   ) {
-    map.current.removeLayer(hiiLayer)
+    map.current.removeLayer(prevHiiLayer)
     map.current.addLayer(hiiLayer)
     setBaseLayerChange(false)
   }

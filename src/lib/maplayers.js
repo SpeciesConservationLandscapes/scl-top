@@ -141,7 +141,6 @@ class MapLayers {
     extraOptions.date = date
 
     return new SecureTileLayer(url, extraOptions)
-
   }
 
   getTigerHistoricalRangeLayer(species) {

@@ -13,6 +13,7 @@ const SecureTileLayer = L.TileLayer.extend({
     const params = this.date
       ? { date: this.date, access_token: this.token }
       : { access_token: this.token }
+
     const url = L.TileLayer.prototype.getTileUrl.call(this, coords)
 
     const qp = L.Util.getParamString(params, url)

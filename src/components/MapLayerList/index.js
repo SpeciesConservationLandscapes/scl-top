@@ -40,10 +40,15 @@ const MapLayerList = ({ map }) => {
   const prevFragmentLayer = usePrevious(fragmentLayer)
   const [speciesChecked, setSpeciesChecked] = useState(true)
   const [speciesLayer, setSpeciesLayer] = useState(null)
+  const prevSpeciesLayer = usePrevious(speciesLayer)
   const [protectedAreaLayer, setProtectedAreaLayer] = useState(null)
   const [biomeLayer, setBiomeLayer] = useState(null)
   const [hiiLayer, setHiiLayer] = useState(null)
+  const prevHiiLayer = usePrevious(hiiLayer)
+  const [structuralHabitatLayer, setStructuralHabitatLayer] = useState(null)
+  const prevStructuralHabitatLayer = usePrevious(structuralHabitatLayer)
   const [baseLayerChange, setBaseLayerChange] = useState(false)
+  const [sHBaseLayerChange, setSHBaseLayerChange] = useState(false)
   const [radioValue, setRadioValue] = useState('None')
 
   const handleTclChange = e => setTclChecked(e.target.checked)
@@ -81,6 +86,25 @@ const MapLayerList = ({ map }) => {
     setProtectedAreaLayer(mapLayers.getProtectedAreaLayer())
     setBiomeLayer(mapLayers.getBiomeLayer())
     setHiiLayer(mapLayers.geHiiLayer(date))
+    setStructuralHabitatLayer(mapLayers.getStructuralHabitat(species, date))
+  }
+
+  const layerManagement = (curLayer, prevLayer, layerChecked) => {
+    if (layerChecked) {
+      const currentLayer = curLayer && curLayer._leaflet_id
+      const previousLayer = prevLayer && prevLayer._leaflet_id
+
+      if (currentLayer !== previousLayer) {
+        if (previousLayer) map.current.removeLayer(prevLayer)
+        if (currentLayer) {
+          map.current.addLayer(curLayer)
+        }
+      } else {
+        map.current.addLayer(curLayer)
+      }
+    } else {
+      map.current.removeLayer(curLayer)
+    }
   }
 
   if (
@@ -88,99 +112,40 @@ const MapLayerList = ({ map }) => {
     baseLayerChange &&
     radioValue === 'Human Influence Index'
   ) {
-    map.current.removeLayer(hiiLayer)
+    map.current.removeLayer(prevHiiLayer)
     map.current.addLayer(hiiLayer)
     setBaseLayerChange(false)
   }
 
-  if (tclLayer !== null) {
-    if (tclChecked) {
-      const currentLayer = tclLayer && tclLayer._leaflet_id
-      const prevLayer = prevTclLayer && prevTclLayer._leaflet_id
-
-      if (currentLayer !== prevLayer) {
-        if (prevLayer) map.current.removeLayer(prevTclLayer)
-        if (currentLayer) {
-          map.current.addLayer(tclLayer)
-        }
-      } else {
-        map.current.addLayer(tclLayer)
-      }
-    } else {
-      map.current.removeLayer(tclLayer)
-    }
+  if (
+    structuralHabitatLayer !== null &&
+    sHBaseLayerChange &&
+    radioValue === 'Structural Habitat'
+  ) {
+    map.current.removeLayer(prevStructuralHabitatLayer)
+    map.current.addLayer(structuralHabitatLayer)
+    setSHBaseLayerChange(false)
   }
 
-  if (restorationLayer !== null) {
-    if (restorationChecked) {
-      const currentLayer = restorationLayer && restorationLayer._leaflet_id
-      const prevLayer = prevRestorationLayer && prevRestorationLayer._leaflet_id
+  if (tclLayer !== null) layerManagement(tclLayer, prevTclLayer, tclChecked)
 
-      if (currentLayer !== prevLayer) {
-        if (prevLayer) map.current.removeLayer(prevRestorationLayer)
-        if (currentLayer) {
-          map.current.addLayer(restorationLayer)
-        }
-      } else {
-        map.current.addLayer(restorationLayer)
-      }
-    } else {
-      map.current.removeLayer(restorationLayer)
-    }
-  }
+  if (restorationLayer !== null)
+    layerManagement(restorationLayer, prevRestorationLayer, restorationChecked)
 
-  if (surveyLayer !== null) {
-    if (surveyChecked) {
-      const currentLayer = surveyLayer && surveyLayer._leaflet_id
-      const prevLayer = prevSurveyLayer && prevSurveyLayer._leaflet_id
+  if (surveyLayer !== null)
+    layerManagement(surveyLayer, prevSurveyLayer, surveyChecked)
 
-      if (currentLayer !== prevLayer) {
-        if (prevLayer) map.current.removeLayer(prevSurveyLayer)
-        if (currentLayer) {
-          map.current.addLayer(surveyLayer)
-        }
-      } else {
-        map.current.addLayer(surveyLayer)
-      }
-    } else {
-      map.current.removeLayer(surveyLayer)
-    }
-  }
+  if (fragmentLayer !== null)
+    layerManagement(fragmentLayer, prevFragmentLayer, fragmentChecked)
 
-  if (fragmentLayer !== null) {
-    if (fragmentChecked) {
-      const currentLayer = fragmentLayer && fragmentLayer._leaflet_id
-      const prevLayer = prevFragmentLayer && prevFragmentLayer._leaflet_id
-
-      if (currentLayer !== prevLayer) {
-        if (prevLayer) map.current.removeLayer(prevFragmentLayer)
-        if (currentLayer) {
-          map.current.addLayer(fragmentLayer)
-        }
-      } else {
-        map.current.addLayer(fragmentLayer)
-      }
-    } else {
-      map.current.removeLayer(fragmentLayer)
-    }
-  }
-
-  if (speciesLayer !== null) {
-    if (speciesChecked) {
-      map.current.addLayer(speciesLayer)
-    } else {
-      map.current.removeLayer(speciesLayer)
-    }
-
-    if (map.current.hasLayer(speciesLayer)) {
-      speciesLayer.bringToFront()
-    }
-  }
+  if (speciesLayer !== null)
+    layerManagement(speciesLayer, prevSpeciesLayer, speciesChecked)
 
   useEffect(() => {
     const date = dateFormat(dateContext)
 
     setBaseLayerChange(true)
+    setSHBaseLayerChange(true)
     fetchBaseLayers(date)
   }, [dateContext])
 
@@ -239,6 +204,7 @@ const MapLayerList = ({ map }) => {
           map={map}
           layers={{
             'Protected Area': protectedAreaLayer,
+            'Structural Habitat': structuralHabitatLayer,
             Biome: biomeLayer,
             'Human Influence Index': hiiLayer,
           }}

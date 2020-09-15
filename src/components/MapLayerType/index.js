@@ -191,7 +191,7 @@ const MapLayerType = ({ map, layers, radioValue, handleRadioChange }) => {
       default:
         return (
           <>
-            <LegendIconStyle bgColor="#16A51C" setMargin="true" />{' '}
+            <LegendIconStyle bgColor="#009900" setMargin="true" />{' '}
             <RadioItemLabel>{name}</RadioItemLabel>
           </>
         )

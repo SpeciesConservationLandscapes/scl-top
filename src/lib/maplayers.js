@@ -134,10 +134,14 @@ class MapLayers {
     return new SecureTileLayer(url, this.defaultTileLayerConfig)
   }
 
-  geHiiLayer() {
+  geHiiLayer(date) {
     const url = `${TILE_API_ROOT}/tiles/hii/{z}/{x}/{y}/`
+    const extraOptions = this.defaultTileLayerConfig
 
-    return new SecureTileLayer(url, this.defaultTileLayerConfig)
+    extraOptions.date = date
+
+    return new SecureTileLayer(url, extraOptions)
+
   }
 
   getTigerHistoricalRangeLayer(species) {

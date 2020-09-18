@@ -210,7 +210,7 @@ const MapLayerType = ({
       default:
         return (
           <>
-            <LegendIconStyle bgColor="#009900" setMargin="true" />{' '}
+            <LegendIconStyle bgColor="#009900" setMargin />{' '}
             <RadioItemLabel>{name}</RadioItemLabel>
             {name === 'Structural Habitat' && structuralHabitatClosestDateLabel}
           </>

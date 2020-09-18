@@ -45,8 +45,10 @@ const MapLayerList = ({ map }) => {
   const [biomeLayer, setBiomeLayer] = useState(null)
   const [hiiLayer, setHiiLayer] = useState(null)
   const prevHiiLayer = usePrevious(hiiLayer)
+  const [hiiClosestDate, setHiiClosestDate] = useState('')
   const [structuralHabitatLayer, setStructuralHabitatLayer] = useState(null)
   const prevStructuralHabitatLayer = usePrevious(structuralHabitatLayer)
+  const [structuralHabitatClosestDate, setStructuralHabitatClosestDate] = useState('')
   const [baseLayerChange, setBaseLayerChange] = useState(false)
   const [sHBaseLayerChange, setSHBaseLayerChange] = useState(false)
   const [radioValue, setRadioValue] = useState('None')
@@ -61,7 +63,9 @@ const MapLayerList = ({ map }) => {
   const handleRestorationLayer = layer => setRestorationLayer(layer)
   const handleSurveyLayer = layer => setSurveyLayer(layer)
   const handleFragmentLayer = layer => setFragmentLayer(layer)
-  const handleRadioChange = event => setRadioValue(event.target.value)
+  const handleRadioChange = e => setRadioValue(e.target.value)
+  const handleHiiClosestDate = date => setHiiClosestDate(date)
+  const handleStructuralHabitatClosestDate = date => setStructuralHabitatClosestDate(date)
 
   const fetchLayers = (countryCode, date) => {
     mapLayers.getTclLayer(
@@ -85,8 +89,8 @@ const MapLayerList = ({ map }) => {
     setSpeciesLayer(mapLayers.getTigerHistoricalRangeLayer(species))
     setProtectedAreaLayer(mapLayers.getProtectedAreaLayer())
     setBiomeLayer(mapLayers.getBiomeLayer())
-    setHiiLayer(mapLayers.geHiiLayer(date))
-    setStructuralHabitatLayer(mapLayers.getStructuralHabitat(species, date))
+    setHiiLayer(mapLayers.geHiiLayer(date, handleHiiClosestDate))
+    setStructuralHabitatLayer(mapLayers.getStructuralHabitat(species, date, handleStructuralHabitatClosestDate))
   }
 
   const layerManagement = (curLayer, prevLayer, layerChecked) => {
@@ -202,6 +206,8 @@ const MapLayerList = ({ map }) => {
       <ListItem className={classes.layerTypeStyle}>
         <MapLayerType
           map={map}
+          hiiClosetDate={hiiClosestDate}
+          structuralHabitatClosestDate={structuralHabitatClosestDate}
           layers={{
             'Protected Area': protectedAreaLayer,
             'Structural Habitat': structuralHabitatLayer,

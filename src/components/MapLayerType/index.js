@@ -66,10 +66,27 @@ const RadioItemLabel = styled('span')`
   padding-top: 10px;
 `
 
-const MapLayerType = ({ map, layers, radioValue, handleRadioChange }) => {
+const MapLayerType = ({
+  map,
+  hiiClosetDate,
+  structuralHabitatClosestDate,
+  layers,
+  radioValue,
+  handleRadioChange,
+}) => {
   const classes = useStyles()
   const layerNames = Object.keys(layers)
   const prevRadioValue = usePrevious(radioValue)
+
+  const hiiClosestDateLabel =
+    radioValue === 'Human Influence Index' ? hiiClosetDate : ''
+
+  const structuralHabitatClosestDateLabel = radioValue ===
+    'Structural Habitat' && (
+    <div style={{ padding: '10px 0 0 5px', fontSize: '1rem' }}>
+      {structuralHabitatClosestDate}
+    </div>
+  )
 
   useEffect(() => {
     if (radioValue === 'None') {
@@ -169,30 +186,33 @@ const MapLayerType = ({ map, layers, radioValue, handleRadioChange }) => {
         )
       case 'Human Influence Index':
         return (
-          <TreeView
-            className={classes.labelStyle}
-            defaultCollapseIcon={<ExpandMoreIcon />}
-            defaultExpandIcon={<ChevronRightIcon />}
-          >
-            <TreeItem nodeId="1" label={name}>
-              <TreeItem nodeId="2" label={<HiiLegend />} />
-              <TreeItem
-                nodeId="3"
-                label={
-                  <HiiDescription>
-                    <span>Low</span>
-                    <span>High</span>
-                  </HiiDescription>
-                }
-              />
-            </TreeItem>
-          </TreeView>
+          <>
+            <TreeView
+              className={classes.labelStyle}
+              defaultCollapseIcon={<ExpandMoreIcon />}
+              defaultExpandIcon={<ChevronRightIcon />}
+            >
+              <TreeItem nodeId="1" label={`${name} ${hiiClosestDateLabel}`}>
+                <TreeItem nodeId="2" label={<HiiLegend />} />
+                <TreeItem
+                  nodeId="3"
+                  label={
+                    <HiiDescription>
+                      <span>Low</span>
+                      <span>High</span>
+                    </HiiDescription>
+                  }
+                />
+              </TreeItem>
+            </TreeView>
+          </>
         )
       default:
         return (
           <>
             <LegendIconStyle bgColor="#009900" setMargin="true" />{' '}
             <RadioItemLabel>{name}</RadioItemLabel>
+            {name === 'Structural Habitat' && structuralHabitatClosestDateLabel}
           </>
         )
     }
@@ -233,6 +253,8 @@ MapLayerType.propTypes = {
   map: PropTypes.shape({
     current: PropTypes.object,
   }).isRequired,
+  hiiClosetDate: PropTypes.string.isRequired,
+  structuralHabitatClosestDate: PropTypes.string.isRequired,
   layers: PropTypes.instanceOf(Object).isRequired,
   radioValue: PropTypes.string.isRequired,
   handleRadioChange: PropTypes.func.isRequired,

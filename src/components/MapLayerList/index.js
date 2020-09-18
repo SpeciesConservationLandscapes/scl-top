@@ -20,8 +20,9 @@ const useStyles = makeStyles(() => ({
 
 const MapLayerList = ({ map }) => {
   const classes = useStyles()
-  const countryContext = useContext(AppContext).countryCode
-  const dateContext = useContext(AppContext).date
+  const { countryCode: countryContext, date: dateContext } = useContext(
+    AppContext,
+  )
 
   const species = { id: 1, name: 'Panthera tigris' }
 
@@ -45,10 +46,17 @@ const MapLayerList = ({ map }) => {
   const [biomeLayer, setBiomeLayer] = useState(null)
   const [hiiLayer, setHiiLayer] = useState(null)
   const prevHiiLayer = usePrevious(hiiLayer)
+  const [hiiClosestDate, setHiiClosestDate] = useState('')
   const [structuralHabitatLayer, setStructuralHabitatLayer] = useState(null)
   const prevStructuralHabitatLayer = usePrevious(structuralHabitatLayer)
-  const [baseLayerChange, setBaseLayerChange] = useState(false)
-  const [sHBaseLayerChange, setSHBaseLayerChange] = useState(false)
+  const [
+    structuralHabitatClosestDate,
+    setStructuralHabitatClosestDate,
+  ] = useState('')
+  const [hiiLayerChange, setHiiLayerChange] = useState(false)
+  const [structuralHabitatLayerChange, setStructuralLayerChange] = useState(
+    false,
+  )
   const [radioValue, setRadioValue] = useState('None')
 
   const handleTclChange = e => setTclChecked(e.target.checked)
@@ -61,7 +69,10 @@ const MapLayerList = ({ map }) => {
   const handleRestorationLayer = layer => setRestorationLayer(layer)
   const handleSurveyLayer = layer => setSurveyLayer(layer)
   const handleFragmentLayer = layer => setFragmentLayer(layer)
-  const handleRadioChange = event => setRadioValue(event.target.value)
+  const handleRadioChange = e => setRadioValue(e.target.value)
+  const handleHiiClosestDate = date => setHiiClosestDate(date)
+  const handleStructuralHabitatClosestDate = date =>
+    setStructuralHabitatClosestDate(date)
 
   const fetchLayers = (countryCode, date) => {
     mapLayers.getTclLayer(
@@ -85,8 +96,14 @@ const MapLayerList = ({ map }) => {
     setSpeciesLayer(mapLayers.getTigerHistoricalRangeLayer(species))
     setProtectedAreaLayer(mapLayers.getProtectedAreaLayer())
     setBiomeLayer(mapLayers.getBiomeLayer())
-    setHiiLayer(mapLayers.geHiiLayer(date))
-    setStructuralHabitatLayer(mapLayers.getStructuralHabitat(species, date))
+    setHiiLayer(mapLayers.geHiiLayer(date, handleHiiClosestDate))
+    setStructuralHabitatLayer(
+      mapLayers.getStructuralHabitat(
+        species,
+        date,
+        handleStructuralHabitatClosestDate,
+      ),
+    )
   }
 
   const layerManagement = (curLayer, prevLayer, layerChecked) => {
@@ -107,25 +124,29 @@ const MapLayerList = ({ map }) => {
     }
   }
 
-  if (
-    hiiLayer !== null &&
-    baseLayerChange &&
-    radioValue === 'Human Influence Index'
-  ) {
-    map.current.removeLayer(prevHiiLayer)
-    map.current.addLayer(hiiLayer)
-    setBaseLayerChange(false)
+  const baseLayerManagement = (curLayer, prevLayer, handleChange) => {
+    map.current.removeLayer(prevLayer)
+    map.current.addLayer(curLayer)
+    handleChange(false)
   }
 
   if (
+    hiiLayer !== null &&
+    hiiLayerChange &&
+    radioValue === 'Human Influence Index'
+  )
+    baseLayerManagement(hiiLayer, prevHiiLayer, setHiiLayerChange)
+
+  if (
     structuralHabitatLayer !== null &&
-    sHBaseLayerChange &&
+    structuralHabitatLayerChange &&
     radioValue === 'Structural Habitat'
-  ) {
-    map.current.removeLayer(prevStructuralHabitatLayer)
-    map.current.addLayer(structuralHabitatLayer)
-    setSHBaseLayerChange(false)
-  }
+  )
+    baseLayerManagement(
+      structuralHabitatLayer,
+      prevStructuralHabitatLayer,
+      setStructuralLayerChange,
+    )
 
   if (tclLayer !== null) layerManagement(tclLayer, prevTclLayer, tclChecked)
 
@@ -144,8 +165,8 @@ const MapLayerList = ({ map }) => {
   useEffect(() => {
     const date = dateFormat(dateContext)
 
-    setBaseLayerChange(true)
-    setSHBaseLayerChange(true)
+    setHiiLayerChange(true)
+    setStructuralLayerChange(true)
     fetchBaseLayers(date)
   }, [dateContext])
 
@@ -202,6 +223,8 @@ const MapLayerList = ({ map }) => {
       <ListItem className={classes.layerTypeStyle}>
         <MapLayerType
           map={map}
+          hiiClosetDate={hiiClosestDate}
+          structuralHabitatClosestDate={structuralHabitatClosestDate}
           layers={{
             'Protected Area': protectedAreaLayer,
             'Structural Habitat': structuralHabitatLayer,

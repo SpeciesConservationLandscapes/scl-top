@@ -134,11 +134,16 @@ class MapLayers {
     return new SecureTileLayer(url, this.defaultTileLayerConfig)
   }
 
-  geHiiLayer(date) {
-    const url = `${TILE_API_ROOT}/tiles/hii/{z}/{x}/{y}/`
+  geHiiLayer(date, setClosestDate) {
+    const baseUrl = `${TILE_API_ROOT}/tiles/hii`
+    const url = `${baseUrl}/{z}/{x}/{y}/`
+    const closestDateUrl = `${baseUrl}/1/1/1/?date=${date}&get_date`
     const extraOptions = this.defaultTileLayerConfig
 
     extraOptions.date = date
+    this.api.getData(closestDateUrl).then(resp => {
+      setClosestDate(resp.data)
+    })
 
     return new SecureTileLayer(url, extraOptions)
   }
@@ -150,12 +155,17 @@ class MapLayers {
     return new SecureTileLayer(url, this.defaultTileLayerConfig)
   }
 
-  getStructuralHabitat(species, date) {
+  getStructuralHabitat(species, date, setClosestDate) {
     const speciesSlug = species.name.replace(' ', '_')
-    const url = `${TILE_API_ROOT}/tiles/species/${speciesSlug}/structural_habitat/{z}/{x}/{y}/`
+    const baseUrl = `${TILE_API_ROOT}/tiles/species/${speciesSlug}/structural_habitat`
+    const url = `${baseUrl}/{z}/{x}/{y}/`
+    const closestDateUrl = `${baseUrl}/1/1/1/?date=${date}&get_date`
     const extraOptions = this.defaultTileLayerConfig
 
     extraOptions.date = date
+    this.api.getData(closestDateUrl).then(resp => {
+      setClosestDate(resp.data)
+    })
 
     return new SecureTileLayer(url, extraOptions)
   }

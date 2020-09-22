@@ -134,11 +134,20 @@ class MapLayers {
     return new SecureTileLayer(url, this.defaultTileLayerConfig)
   }
 
-  geHiiLayer(date, setClosestDate) {
-    const baseUrl = `${TILE_API_ROOT}/tiles/hii`
+  getHiiLayer(date, setClosestDate) {
+    const extraOptions = this.defaultTileLayerConfig
+
+    const subdomain =
+      Array.isArray(extraOptions.subdomains) &&
+      extraOptions.subdomains.length > 0
+        ? extraOptions.subdomains[0]
+        : ''
+
+    const tileUrl = TILE_API_ROOT.replace('{s}', subdomain)
+
+    const baseUrl = `${tileUrl}/tiles/hii`
     const url = `${baseUrl}/{z}/{x}/{y}/`
     const closestDateUrl = `${baseUrl}/1/1/1/?date=${date}&get_date`
-    const extraOptions = this.defaultTileLayerConfig
 
     extraOptions.date = date
     this.api.getData(closestDateUrl).then(resp => {
@@ -150,17 +159,27 @@ class MapLayers {
 
   getTigerHistoricalRangeLayer(species) {
     const speciesSlug = species.name.replace(' ', '_')
+
     const url = `${TILE_API_ROOT}/tiles/species/${speciesSlug}/{z}/{x}/{y}/`
 
     return new SecureTileLayer(url, this.defaultTileLayerConfig)
   }
 
   getStructuralHabitat(species, date, setClosestDate) {
+    const extraOptions = this.defaultTileLayerConfig
     const speciesSlug = species.name.replace(' ', '_')
-    const baseUrl = `${TILE_API_ROOT}/tiles/species/${speciesSlug}/structural_habitat`
+
+    const subdomain =
+      Array.isArray(extraOptions.subdomains) &&
+      extraOptions.subdomains.length > 0
+        ? extraOptions.subdomains[0]
+        : ''
+
+    const tileUrl = TILE_API_ROOT.replace('{s}', subdomain)
+
+    const baseUrl = `${tileUrl}/tiles/species/${speciesSlug}/structural_habitat`
     const url = `${baseUrl}/{z}/{x}/{y}/`
     const closestDateUrl = `${baseUrl}/1/1/1/?date=${date}&get_date`
-    const extraOptions = this.defaultTileLayerConfig
 
     extraOptions.date = date
     this.api.getData(closestDateUrl).then(resp => {

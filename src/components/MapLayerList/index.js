@@ -96,7 +96,7 @@ const MapLayerList = ({ map }) => {
     setSpeciesLayer(mapLayers.getTigerHistoricalRangeLayer(species))
     setProtectedAreaLayer(mapLayers.getProtectedAreaLayer())
     setBiomeLayer(mapLayers.getBiomeLayer())
-    setHiiLayer(mapLayers.geHiiLayer(date, handleHiiClosestDate))
+    setHiiLayer(mapLayers.getHiiLayer(date, handleHiiClosestDate))
     setStructuralHabitatLayer(
       mapLayers.getStructuralHabitat(
         species,

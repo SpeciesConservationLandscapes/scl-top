@@ -20,6 +20,18 @@ class MapLayers {
     return this.tokenUtil.token
   }
 
+  _fetchNewBaseUrl(baseUrl) {
+    const subdomain =
+      Array.isArray(this.defaultTileLayerConfig.subdomains) &&
+      this.defaultTileLayerConfig.subdomains.length > 0
+        ? this.defaultTileLayerConfig.subdomains[0]
+        : ''
+
+    const tileRoot = TILE_API_ROOT.replace('{s}', subdomain)
+
+    return `${tileRoot}${baseUrl}`
+  }
+
   getTclLayer(country, date, species, setLayer, map) {
     const speciesId = species.id
     const url = `${API_ROOT}/sclstats/?country=${country}&scl__date=${date}&scl__species=${speciesId}`
@@ -134,22 +146,22 @@ class MapLayers {
     return new SecureTileLayer(url, this.defaultTileLayerConfig)
   }
 
-  geHiiLayer(date, setClosestDate) {
-    const baseUrl = `${TILE_API_ROOT}/tiles/hii`
+  getHiiLayer(date, setClosestDate) {
+    const baseUrl = this._fetchNewBaseUrl(`/tiles/hii`)
     const url = `${baseUrl}/{z}/{x}/{y}/`
     const closestDateUrl = `${baseUrl}/1/1/1/?date=${date}&get_date`
-    const extraOptions = this.defaultTileLayerConfig
 
-    extraOptions.date = date
+    this.defaultTileLayerConfig.date = date
     this.api.getData(closestDateUrl).then(resp => {
       setClosestDate(resp.data)
     })
 
-    return new SecureTileLayer(url, extraOptions)
+    return new SecureTileLayer(url, this.defaultTileLayerConfig)
   }
 
   getTigerHistoricalRangeLayer(species) {
     const speciesSlug = species.name.replace(' ', '_')
+
     const url = `${TILE_API_ROOT}/tiles/species/${speciesSlug}/{z}/{x}/{y}/`
 
     return new SecureTileLayer(url, this.defaultTileLayerConfig)
@@ -157,17 +169,19 @@ class MapLayers {
 
   getStructuralHabitat(species, date, setClosestDate) {
     const speciesSlug = species.name.replace(' ', '_')
-    const baseUrl = `${TILE_API_ROOT}/tiles/species/${speciesSlug}/structural_habitat`
+
+    const baseUrl = this._fetchNewBaseUrl(
+      `/tiles/species/${speciesSlug}/structural_habitat`,
+    )
     const url = `${baseUrl}/{z}/{x}/{y}/`
     const closestDateUrl = `${baseUrl}/1/1/1/?date=${date}&get_date`
-    const extraOptions = this.defaultTileLayerConfig
 
-    extraOptions.date = date
+    this.defaultTileLayerConfig.date = date
     this.api.getData(closestDateUrl).then(resp => {
       setClosestDate(resp.data)
     })
 
-    return new SecureTileLayer(url, extraOptions)
+    return new SecureTileLayer(url, this.defaultTileLayerConfig)
   }
 
   downloadReport(country, date) {

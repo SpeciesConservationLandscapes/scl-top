@@ -76,16 +76,6 @@ const DateSlider = () => {
   const [dateValue, setDateValue] = useState([])
   const [sliderValue, setSliderValue] = useState(100)
 
-  const convertNewDate = date => {
-    const datePart = date.split('-')
-
-    return new Date(
-      Number(datePart[0]),
-      Number(datePart[1]) - 1,
-      Number(datePart[2]),
-    )
-  }
-
   const calRelativeValue = (min, max, n) => {
     const numerator = n - min
     const denominator = max - min
@@ -93,27 +83,29 @@ const DateSlider = () => {
     return (numerator / denominator) * 100
   }
 
-  const dateMarksFormat = array => {
-    const valueLength = array.length
-    const firstDate = new Date(array[0]).getTime()
-    const lastDate = new Date(array[valueLength - 1]).getTime()
-
+  const dateMarksFormat = dateArray => {
     let result = []
 
-    if (valueLength === 1) {
-      result.push({
-        value: 100,
-        label: convertNewDate(array[0]).toLocaleDateString(),
-      })
-    } else {
-      result = array.map(date => {
-        const dateTime = new Date(date).getTime()
+    if (dateArray && Array.isArray(dateArray)) {
+      const dateLength = dateArray.length
+      const firstDate = new Date(dateArray[0]).getTime()
+      const lastDate = new Date(dateArray[dateLength - 1]).getTime()
 
-        return {
-          value: calRelativeValue(firstDate, lastDate, dateTime),
-          label: convertNewDate(date).toLocaleDateString(),
-        }
-      })
+      if (dateLength === 1) {
+        result.push({
+          value: 100,
+          label: dateArray[0],
+        })
+      } else {
+        result = dateArray.map(date => {
+          const dateMark = new Date(date).getTime()
+
+          return {
+            value: calRelativeValue(firstDate, lastDate, dateMark),
+            label: date,
+          }
+        })
+      }
     }
 
     return result
@@ -131,10 +123,7 @@ const DateSlider = () => {
   useEffect(() => {
     if (!(countryContext === null || countryContext === '')) {
       availableDate.getDate(countryContext, species).then(date => {
-        const dateData = date.data
-
-        const dateFormat =
-          dateData.length > 0 ? dateMarksFormat(dateData) : dateData
+        const dateFormat = dateMarksFormat(date.data)
 
         const dateLabel =
           dateFormat.length > 0 ? dateFormat[dateFormat.length - 1].label : ''

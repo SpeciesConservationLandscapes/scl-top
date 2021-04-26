@@ -83,27 +83,29 @@ const DateSlider = () => {
     return (numerator / denominator) * 100
   }
 
-  const dateMarksFormat = array => {
-    const valueLength = array.length
-    const firstDate = new Date(array[0]).getTime()
-    const lastDate = new Date(array[valueLength - 1]).getTime()
-
+  const dateMarksFormat = dateArray => {
     let result = []
 
-    if (valueLength === 1) {
-      result.push({
-        value: 100,
-        label: array[0],
-      })
-    } else {
-      result = array.map(date => {
-        const dateTime = new Date(date).getTime()
+    if (dateArray && Array.isArray(dateArray)) {
+      const dateLength = dateArray.length
+      const firstDate = new Date(dateArray[0]).getTime()
+      const lastDate = new Date(dateArray[dateLength - 1]).getTime()
 
-        return {
-          value: calRelativeValue(firstDate, lastDate, dateTime),
-          label: date,
-        }
-      })
+      if (dateLength === 1) {
+        result.push({
+          value: 100,
+          label: dateArray[0],
+        })
+      } else {
+        result = dateArray.map(date => {
+          const dateMark = new Date(date).getTime()
+
+          return {
+            value: calRelativeValue(firstDate, lastDate, dateMark),
+            label: date,
+          }
+        })
+      }
     }
 
     return result

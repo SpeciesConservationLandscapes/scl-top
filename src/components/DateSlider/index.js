@@ -76,16 +76,6 @@ const DateSlider = () => {
   const [dateValue, setDateValue] = useState([])
   const [sliderValue, setSliderValue] = useState(100)
 
-  const convertNewDate = date => {
-    const datePart = date.split('-')
-
-    return new Date(
-      Number(datePart[0]),
-      Number(datePart[1]) - 1,
-      Number(datePart[2]),
-    )
-  }
-
   const calRelativeValue = (min, max, n) => {
     const numerator = n - min
     const denominator = max - min
@@ -103,7 +93,7 @@ const DateSlider = () => {
     if (valueLength === 1) {
       result.push({
         value: 100,
-        label: convertNewDate(array[0]).toLocaleDateString(),
+        label: array[0],
       })
     } else {
       result = array.map(date => {
@@ -111,7 +101,7 @@ const DateSlider = () => {
 
         return {
           value: calRelativeValue(firstDate, lastDate, dateTime),
-          label: convertNewDate(date).toLocaleDateString(),
+          label: date,
         }
       })
     }
@@ -131,10 +121,7 @@ const DateSlider = () => {
   useEffect(() => {
     if (!(countryContext === null || countryContext === '')) {
       availableDate.getDate(countryContext, species).then(date => {
-        const dateData = date.data
-
-        const dateFormat =
-          dateData.length > 0 ? dateMarksFormat(dateData) : dateData
+        const dateFormat = dateMarksFormat(date.data)
 
         const dateLabel =
           dateFormat.length > 0 ? dateFormat[dateFormat.length - 1].label : ''

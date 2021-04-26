@@ -8,7 +8,6 @@ import MapLayerItem from '../MapLayerItem'
 import MapLayerType from '../MapLayerType'
 import MapLayers from '../../lib/maplayers'
 import { AppContext } from '../../contexts'
-import { dateFormat } from '../../helpers'
 
 import usePrevious from '../../lib/usePrevious'
 
@@ -163,18 +162,14 @@ const MapLayerList = ({ map }) => {
     layerManagement(speciesLayer, prevSpeciesLayer, speciesChecked)
 
   useEffect(() => {
-    const date = dateFormat(dateContext)
-
     setHiiLayerChange(true)
     setStructuralLayerChange(true)
-    fetchBaseLayers(date)
+    fetchBaseLayers(dateContext)
   }, [dateContext])
 
   useEffect(() => {
-    const date = dateFormat(dateContext)
-
     if (!(countryContext === null || countryContext === '')) {
-      fetchLayers(countryContext, date)
+      fetchLayers(countryContext, dateContext)
     }
   }, [countryContext, dateContext])
 

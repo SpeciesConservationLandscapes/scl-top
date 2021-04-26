@@ -8,7 +8,6 @@ import OrgsPanel from '../OrgsPanel'
 import CountrySelector from '../CountrySelector'
 import MapLayers from '../../lib/maplayers'
 import { AppContext } from '../../contexts'
-import { dateFormat } from '../../helpers'
 
 const footerStyles = makeStyles(theme => ({
   footer: {
@@ -37,10 +36,8 @@ const Footer = () => {
   const mapLayers = new MapLayers()
   const { isAuthenticated } = useAuth0()
 
-  const downloadReport = () => {
-    const date = dateFormat(dateContext)
-
-    mapLayers.downloadReport(countryContext, date)
+  const downloadMapLayerReport = () => {
+    mapLayers.downloadReport(countryContext, dateContext)
   }
 
   return (
@@ -58,7 +55,7 @@ const Footer = () => {
             <>
               <CountrySelector />
               <Button
-                onClick={downloadReport}
+                onClick={downloadMapLayerReport}
                 variant="contained"
                 size="small"
                 className={classes.downloadButton}

@@ -36,7 +36,7 @@ const Footer = () => {
   const mapLayers = new MapLayers()
   const { isAuthenticated } = useAuth0()
 
-  const downloadMapLayerReport = () => {
+  const downloadReport = () => {
     mapLayers.downloadReport(countryContext, dateContext)
   }
 
@@ -55,7 +55,7 @@ const Footer = () => {
             <>
               <CountrySelector />
               <Button
-                onClick={downloadMapLayerReport}
+                onClick={downloadReport}
                 variant="contained"
                 size="small"
                 className={classes.downloadButton}

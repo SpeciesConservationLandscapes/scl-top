@@ -184,6 +184,12 @@ class MapLayers {
     return new SecureTileLayer(url, this.defaultTileLayerConfig)
   }
 
+  getKeyBiodiversityAreaLayer() {
+    const url = `${TILE_API_ROOT}/tiles/kbas/{z}/{x}/{y}/`
+
+    return new SecureTileLayer(url, this.defaultTileLayerConfig)
+  }
+
   downloadReport(country, date) {
     const url = `${API_ROOT}/reports/species/?country=${country}&species=1&date=${date}`
 

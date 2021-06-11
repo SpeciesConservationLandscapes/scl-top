@@ -56,6 +56,7 @@ const MapLayerList = ({ map }) => {
   const [structuralHabitatLayerChange, setStructuralLayerChange] = useState(
     false,
   )
+  const [keyBiodiversityAreaLayer, setKeyBiodiversityAreaLayer] = useState(null)
   const [radioValue, setRadioValue] = useState('None')
 
   const handleTclChange = e => setTclChecked(e.target.checked)
@@ -94,6 +95,7 @@ const MapLayerList = ({ map }) => {
   const fetchBaseLayers = date => {
     setSpeciesLayer(mapLayers.getTigerHistoricalRangeLayer(species))
     setProtectedAreaLayer(mapLayers.getProtectedAreaLayer())
+    setKeyBiodiversityAreaLayer(mapLayers.getKeyBiodiversityAreaLayer())
     setBiomeLayer(mapLayers.getBiomeLayer())
     setHiiLayer(mapLayers.getHiiLayer(date, handleHiiClosestDate))
     setStructuralHabitatLayer(
@@ -222,6 +224,7 @@ const MapLayerList = ({ map }) => {
           structuralHabitatClosestDate={structuralHabitatClosestDate}
           layers={{
             'Protected Area': protectedAreaLayer,
+            'Key Biodiversity Area': keyBiodiversityAreaLayer,
             'Structural Habitat': structuralHabitatLayer,
             Biome: biomeLayer,
             'Human Influence Index': hiiLayer,
